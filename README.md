@@ -34,6 +34,9 @@ Then inside your template files (or anywhere else) you can use the `vite` helper
 
 ## Setup
 
+### Install vite
+Follow the instructions [here](https://github.com/vitejs/vite#getting-started). Or without the use of `vite-app` you can just install vite with npm: `npm i vite --save-dev` (This is great for a simple vanilla js setup).
+
 ### Folder structure
 With the default configuration, kirby-vite expects a folder structure like this:
 ```
@@ -89,5 +92,38 @@ Add the following NPM scripts to your `package.json`:
 "scripts": {
   "dev": "vite",
   "build": "vite build"  
+}
+```
+
+## Watch php files
+If you also want to live reload your site in development mode whenever you change something in kirby install my [vite-plugin-live-reload](https://github.com/arnoson/vite-plugin-live-reload). Then adjust your `vite.config.js`:
+```js
+// vite.config.js
+import liveReload from 'vite-plugin-live-reload'
+
+export default {
+  // ...
+  plugins: [
+    liveReload('public/site/(templates|snippets|controllers|models)/**/*.php'),
+  ]
+}
+```
+
+## Known issues
+if you use a vanilla js setup without vue or another framework, changes on your entry file (`index.js`) won't cause a page reload in your kirby site. A workaround is to watch your entry file manually with [vite-plugin-live-reload](https://github.com/arnoson/vite-plugin-live-reload).
+```js
+// vite.config.js
+import liveReload from 'vite-plugin-live-reload'
+
+export default {
+  // ...
+  plugins: [
+    liveReload('index.js')
+    // Or if you aso want to watch php files:
+    // liveReload([
+    //  'src/index.js',
+    //  'public/site/(templates|snippets|controllers|models)/**/*.php')
+    // ])
+  ]
 }
 ```
