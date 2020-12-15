@@ -56,7 +56,9 @@ With the default configuration, kirby-vite expects a folder structure like this:
 └── package.json
 
 ```
-Therefore your `vite.config.js` should look something like this:
+
+### Vite configuration
+To match the folder structure described above, your `vite.config.js` should look something like this:
 ```js
 // vite.config.js
 export default {
