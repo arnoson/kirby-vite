@@ -38,7 +38,7 @@ class Vite {
   protected function outDir(): string {
     return $this->outDir ??
       ($this->outDir = $this->sanitizeDir(
-        option('arnoson.kirby-vite.outDir', '/assets')
+        option('arnoson.kirby-vite.outDir', '/assets/dist')
       ));
   }
 
