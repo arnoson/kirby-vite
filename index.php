@@ -11,7 +11,8 @@ function vite(string $path, $options = []) {
 
   // Client is special because it doesn't have a file extension we can use.
   if ($path === '@client') {
-    return js($vite->client(), ['type' => 'module']);
+    $client = $vite->client();
+    return $client ? js($client, ['type' => 'module']) : '';
   }
 
   static $placeholders = [

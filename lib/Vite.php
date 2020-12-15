@@ -90,10 +90,10 @@ class Vite {
       return;
     }
 
-    return kirby()->root() .
+    return kirby()->url('index') .
       $this->outDir() .
       $this->assetsDir() .
-      "/$hashedFileName";    
+      "/$hashedFileName";
   }
 
   public function asset(string $fileName): string {
@@ -102,7 +102,7 @@ class Vite {
       : $this->assetProd($fileName);
   }
 
-  public function client(): string {
+  public function client(): ?string {
     return $this->isDev()
       ? $this->devServer() . '/vite/client'
       : null;
