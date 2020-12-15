@@ -6,7 +6,19 @@ use Arnoson\KirbyVite\Vite;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
-function vite(string $path, $options = []) {
+/**
+ * Get the appropriate HTML tag with the right path for the (versioned) asset
+ * file.
+ * 
+ * @param string|array $path Path as it appears in the manifest.json
+ * @param string|bool|array $options Pass an array of attributes for the tag 
+ * or a string/bool. A string/bool behaves in the same way as in Kirby's `css()` 
+ * and `js()` helper functions: for css files it will be used as the value 
+ * of the media attribute, for js files it will determine wether or not the 
+ * script is async. By default the `type` attribute for a script tag will be
+ * `module` but you can override this behaviour.
+ */
+function vite($path, $options = []) {
   $vite = new Vite();
 
   // Client is special because it doesn't have a file extension we can use.
