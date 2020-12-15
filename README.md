@@ -42,7 +42,9 @@ With the default configuration, kirby-vite expects a folder structure like this:
 ```
 .
 ├── public # Your complete kirby site.
-│   ├── assets # Here vite automatically places my compiled assets for production.
+│   ├── assets
+│   │   ├── ...
+│   │   └── dist # Here vite automatically places your compiled assets for production.
 │   ├── content
 │   ├── kirby
 │   ├── media
@@ -119,7 +121,7 @@ Add the following NPM scripts to your `package.json`:
 ```
 
 ## Watch php files
-If you also want to live reload your site in development mode whenever you change something in kirby install my [vite-plugin-live-reload](https://github.com/arnoson/vite-plugin-live-reload). Then adjust your `vite.config.js`:
+If you also want to live reload your site in development mode whenever you change something in kirby, install [vite-plugin-live-reload](https://github.com/arnoson/vite-plugin-live-reload). Then adjust your `vite.config.js`:
 ```js
 // vite.config.js
 import liveReload from 'vite-plugin-live-reload'
