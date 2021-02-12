@@ -146,7 +146,7 @@ class Vite {
    */
   public function client(): ?string {
     return $this->isDev()
-      ? $this->devServer() . '/vite/client'
+      ? $this->devServer() . '/@vite/client'
       : null;
   }
 }
