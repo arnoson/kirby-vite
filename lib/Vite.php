@@ -142,7 +142,7 @@ class Vite {
   }
 
   /**
-   * Get the vite's client url if we are in development mode.
+   * Get vite's client url if we are in development mode.
    */
   public function client(): ?string {
     return $this->isDev()
