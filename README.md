@@ -122,11 +122,20 @@ return [
 Now run `npm dev` (see [NPM scripts](#NPM-scripts)) and visit your kirby site in the browser. Note: we only use vite's dev server to serve our assets. So you can visit your kirby site under your php development server (in this example `my-site.test`).
 
 ## NPM scripts
-When you created your vite app via `npm init @vitejs/app` (see [install vite](#-install-vite), `vite` adds the following NPM scripts to your `package.json`:
+When you created your vite app via `npm init @vitejs/app` (see [install vite](#-install-vite)), `vite` adds the following NPM scripts to your `package.json`:
 ```json
 "scripts": {
   "dev": "vite",
-  "build": "vite build"  
+  "build": "vite build",
+  "preview": "vite serve" 
+}
+```
+We have to alter them like this to get our configuration to work:
+```json
+"scripts": {
+  "dev": "APP_ENV=development vite",
+  "build": "APP_ENV=production vite build"
+  // The `preview` script can be deleted.
 }
 ```
 
