@@ -38,7 +38,7 @@ class Vite {
   protected function outDir(): string {
     return $this->outDir ??
       ($this->outDir = $this->sanitizeDir(
-        option('arnoson.kirby-vite.outDir', '/assets/dist')
+        option('arnoson.kirby-vite.outDir', '/dist')
       ));
   }
 
@@ -48,7 +48,7 @@ class Vite {
   protected function assetsDir():string {
     return $this->assetsDir ??
       ($this->assetsDir = $this->sanitizeDir(
-        option('arnoson.kirby-vite.assetsDir', '/')
+        option('arnoson.kirby-vite.assetsDir', '/assets')
       ));
   }
 
@@ -93,7 +93,7 @@ class Vite {
     }
 
     $manifestPath =
-      kirby()->root() . $this->outDir() . $this->assetsDir() . '/manifest.json';
+      kirby()->root() . $this->outDir() . '/manifest.json';
     
     if (!F::exists($manifestPath)) {
       if (option('debug')) {
@@ -116,7 +116,8 @@ class Vite {
    * Get the url for the specified file for production mode.
    */
   protected function assetProd(string $fileName) {
-    $hashedFileName = $this->manifest()[$fileName] ?? null;
+    $manifestEntry =  $this->manifest()[$fileName] ?? null;
+    $hashedFileName = $manifestEntry['file'] ?? null;
 
     if (!$hashedFileName) {
       if (option('debug')) {
@@ -127,7 +128,6 @@ class Vite {
 
     return kirby()->url('index') .
       $this->outDir() .
-      $this->assetsDir() .
       "/$hashedFileName";
   }
 

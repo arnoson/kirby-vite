@@ -29,7 +29,7 @@ function vite($path, $options = []) {
 
   static $placeholders = [
     '@entry' => 'index.js',
-    '@style' => 'style.css'
+    '@style' => 'index.css'
   ];
   $path = $vite->asset($placeholders[$path] ?? $path);
   $extension = F::extension($path);
