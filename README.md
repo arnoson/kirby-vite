@@ -134,7 +134,6 @@ We have to alter them like this to get our configuration to work:
 "scripts": {
   "dev": "APP_ENV=development vite",
   "build": "APP_ENV=production vite build"
-  /* The `preview` script can be deleted. */
 }
 ```
 
