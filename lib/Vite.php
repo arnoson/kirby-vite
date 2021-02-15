@@ -1,17 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace Arnoson\KirbyVite;
+namespace arnoson\KirbyVite;
 
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use \Exception;
 
 class Vite {
+  protected static $instance = null;
+
   protected array $manifest;
   protected string $outDir;
-  protected string $assetsDir;
   protected string $rootDir;
   protected string $devServer;
+
+  public static function getInstance() {
+    return self::$instance ?? self::$instance = new self;
+  }  
 
   /** 
    * Make sure, a directory starts with a slash and doesn't end with a slash.
@@ -43,16 +48,6 @@ class Vite {
   }
 
   /**
-   * Get the assets directory (relative to the output directory).
-   */
-  protected function assetsDir():string {
-    return $this->assetsDir ??
-      ($this->assetsDir = $this->sanitizeDir(
-        option('arnoson.kirby-vite.assetsDir', '/assets')
-      ));
-  }
-
-  /**
    * Get vite's root directory. So if vite serves our asset under
    * `localhost:3000/src/index.js`, `src` would be the root directory.
    */
@@ -77,7 +72,7 @@ class Vite {
   /**
    * Check if we're in development mode.
    */
-  public function isDev(): bool {
+  protected function isDev(): bool {
     return option('arnoson.kirby-vite.dev', false);
   }
 
@@ -87,7 +82,7 @@ class Vite {
    * @return array An associative array with the unhashed file name as key and
    * the hashed file name as value.
    */
-  public function manifest(): array {
+  protected function manifest(): array {
     if (isset($this->manifest)) {
       return $this->manifest;
     }
@@ -106,47 +101,77 @@ class Vite {
   }
 
   /**
+   * Get a value of a manifest property for a specific entry.
+   */
+  protected function getManifestProperty(string $entry = null, $key = 'file') {
+    $entry = $entry ?? option('arnoson.kirby-vite.entry');
+    $manifestEntry = $this->manifest()[$entry] ?? null;
+    if (!$manifestEntry) {
+      if (option('debug')) {
+        throw new Exception("`$entry` is not a manifest entry.");
+      }
+      return;
+    }
+
+    $value = $manifestEntry[$key] ?? null;
+    if (!$value) {
+      if (option('debug')) {
+        throw new Exception("Manifest entry `$entry` doesn't have property `$key`.");
+      }
+      return;
+    }
+
+    return $value;
+  }
+
+  /**
    * Get the url for the specified file for development mode.
    */
-  protected function assetDev(string $fileName) {
-    return $this->devServer() . $this->rootDir() . "/$fileName";
+  protected function assetDev(string $file) {
+    return $this->devServer() . "/$file";
   }
 
   /**
    * Get the url for the specified file for production mode.
    */
-  protected function assetProd(string $fileName) {
-    $manifestEntry =  $this->manifest()[$fileName] ?? null;
-    $hashedFileName = $manifestEntry['file'] ?? null;
-
-    if (!$hashedFileName) {
-      if (option('debug')) {
-        throw new Exception("No manifest entry exists for file `$fileName`");
-      }
-      return;
-    }
-
-    return kirby()->url('index') .
-      $this->outDir() .
-      "/$hashedFileName";
+  protected function assetProd(string $file) {
+    return kirby()->url('index') . $this->outDir() . "/$file";
   }
 
-  /**
-   * Get the url for the specified file, depending on whether we are in
-   * development or production mode.
-   */
-  public function asset(string $fileName): string {
-    return $this->isDev()
-      ? $this->assetDev($fileName)
-      : $this->assetProd($fileName);
-  }
 
   /**
-   * Get vite's client url if we are in development mode.
+   * Include vite's client if we're in development mode.
    */
   public function client(): ?string {
     return $this->isDev()
-      ? $this->devServer() . '/@vite/client'
+      ? js($this->assetDev('@vite/client'), ['type' => 'module'])
       : null;
+  }
+
+  /**
+   * Include the css file for the specified entry if we're in production mode.
+   */
+  public function css($entry = null, array $options = null): ?string {
+    return !$this->isDev()
+      ? css(
+          $this->assetProd($this->getManifestProperty($entry, 'css')[0]),
+          $options
+        )
+      : null;
+  }
+
+  /**
+   * Include the js file for the specified entry.
+   */
+  public function js($entry = null, $options = []): ?string {
+    $file = $this->isDev()
+      ? $this->assetDev($entry)
+      : $this->assetProd($this->getManifestProperty($entry, 'file'));
+
+    if ( $this->isDev() || option('arnoson.kirby-vite.module')) {
+      $options = array_merge(['type' => 'module'], $options);
+    }
+
+    return js($file, $options);
   }
 }
