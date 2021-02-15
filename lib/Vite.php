@@ -165,7 +165,7 @@ class Vite {
    */
   public function js($entry = null, $options = []): ?string {
     $file = $this->isDev()
-      ? $this->assetDev($entry)
+      ? $this->assetDev($entry ?? option('arnoson.kirby-vite.entry'))
       : $this->assetProd($this->getManifestProperty($entry, 'file'));
 
     if ( $this->isDev() || option('arnoson.kirby-vite.module')) {
