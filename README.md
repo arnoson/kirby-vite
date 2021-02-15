@@ -160,8 +160,8 @@ Create a multi page setup as described [here](https://vitejs.dev/guide/build.htm
 (use js entries instead of html entries).
 You can then pass your entry file names to `kirby-vites` helper functions:
 ```php
-vite()->js('nested/index.js')
-vite()->css('nested/index.js')
+vite()->js('nested/index.js');
+vite()->css('nested/index.js');
 ```
 
 
