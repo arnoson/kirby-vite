@@ -1,0 +1,12 @@
+/* Compagnon Script by Chloé Lozano (http://www.velvetyne.fr/fonts/compagnon/) */
+@font-face {
+  font-family: Compagnon;
+  font-style: bold;
+  src: url('assets/Compagnon-Bold.woff2');
+}
+
+body {
+  font-family: Compagnon;
+  font-style: bold;
+  background-color: cornflowerblue;
+}

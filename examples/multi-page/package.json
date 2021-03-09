@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "php -S localhost:8888 -t public/ public/kirby/router.php",
+    "dev": "APP_ENV=development vite",
+    "build": "APP_ENV=production vite build"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^2.0.5"
+  },
+  "dependencies": {
+    "vite-plugin-live-reload": "^2.0.0"
+  }
+}
