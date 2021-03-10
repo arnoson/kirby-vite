@@ -2,6 +2,7 @@
 
 ## Installation
 
+- run `npm install` inside the root directory
 - run `composer install` inside the `/public` directory
 
 ## Development
