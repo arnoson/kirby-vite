@@ -43,7 +43,7 @@ Then inside your template files (or anywhere else) you can use the helper functi
 
 ## Quick start
 
-- download on of the [examples](examples)
+- download one of the [examples](examples)
 - run `composer install` inside the example's `/public` directory
 - run `npm run dev` inside the example's root directory
 - Visit `localhost:8888` in the browser and make some changes to the js and css files inside `/src`
