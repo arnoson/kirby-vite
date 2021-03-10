@@ -3,19 +3,14 @@ import { resolve } from 'path'
 import fs from 'fs'
 
 const root = 'src'
-const input = {};
-fs.readdirSync(`${root}/templates`).forEach(
-  template =>
-    (input[template] = resolve(
-      __dirname,
-      `${root}/templates/${template}/index.js`
-    ))
-);
-input['shared'] = resolve(
-  __dirname,
-  `${root}/index.js`
-)
-
+const templates = fs.readdirSync(`${root}/templates`)
+const input = Object.fromEntries([
+  ...templates.map(template => [
+    template,
+    resolve(__dirname, `${root}/templates/${template}/index.js`)
+  ]),
+  ['shared', resolve(__dirname, `${root}/index.js`)] 
+])
 
 export default {
   root,
