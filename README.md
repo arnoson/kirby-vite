@@ -147,6 +147,14 @@ return [
 
 Now run `npm dev` (see [NPM scripts](#NPM-scripts)) and visit your kirby site in the browser. Note: we only use vite's dev server to serve our assets. So you can visit your kirby site under your php development server (in this example `my-site.test`).
 
+### Assets during Development
+
+Like shown in the (# folder structure)[#folder-structure] it is important to create a symlink so kirby can find your assets during development:
+
+```
+ln -s /Users/path/to/project/src/assets public/assets
+```
+
 ## NPM scripts
 
 When you created your vite app via `npm init @vitejs/app` (see [install vite](#-install-vite)), `vite` adds the following NPM scripts to your `package.json`:
@@ -189,6 +197,8 @@ return [
 ```
 
 ## Multi-page setup
+
+Checkout the multi-page [example](examples/multi-page) or:
 
 Create a multi page setup as described [here](https://vitejs.dev/guide/build.html#multi-page-app)
 (use js entries instead of html entries).
