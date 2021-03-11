@@ -9,8 +9,7 @@ Kirby\Cms\App::plugin('arnoson/kirby-vite', [
     'entry' => 'index.js',
     'outDir' => 'dist',
     'module' => true,
-    'assetsDir' => 'assets',
-    'dev' => false
+    'assetsDir' => 'assets'
   ]
 ]);
 

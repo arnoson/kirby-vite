@@ -1,8 +1,9 @@
 <?php
-require_once __DIR__ . '/../../../../kirby/bootstrap.php';
+require_once dirname(__DIR__) . '/kirby/bootstrap.php';
 
 new Kirby\Cms\App([
-  "roots" => [
-    "config" => __DIR__ . '/kirby/config'
+  'roots' => [
+    'base' => dirname(__DIR__),
+    'config' => __DIR__ . '/kirby/config'
   ]
 ]);

@@ -1,0 +1,19 @@
+{
+  "name": "kirby-vite-basic-kit",
+  "version": "1.0.0",
+  "main": "vite.config.js",
+  "scripts": {
+    "vite": "vite",
+    "dev": "shx touch src/.lock && concurrently \"npm:server\" \"npm:vite\"",
+    "server": "php -S localhost:8888 -t public server.php",
+    "build": "shx rm -f src/.lock && vite build"
+  },
+  "author": "arnoson",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^6.0.0",
+    "shx": "^0.3.3",
+    "vite": "^2.0.5",
+    "vite-plugin-live-reload": "^2.0.0"
+  }
+}

@@ -1,9 +1,0 @@
-{
-  "name": "arnoson/kirby-vite",
-  "description": "Vite helper for Kirby CMS",
-  "type": "kirby-plugin",
-  "license": "MIT", 
-  "require": {
-      "getkirby/composer-installer": "^1.1"
-  }
-}

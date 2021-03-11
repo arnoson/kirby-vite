@@ -1,2 +1,29 @@
+.DS_Store
+node_modules/
+.phpunit.result.cache
+
+# Frontend
+/public/assets
+/public/dist/
+
+# Kirby
+.lock
+kirby
 vendor
-*.cache
+
+/public/media/*
+!/public/media/index.html
+
+/storage/accounts/*
+!/storage/accounts/.gitkeep
+
+/storage/cache/*
+!/storage/cache/.gitkeep
+
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+/storage/sessions/*
+!/storage/sessions/.gitkeep
+
+/site/config/.license

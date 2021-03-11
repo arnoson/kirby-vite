@@ -9,7 +9,6 @@ use \Exception;
 class Vite {
   protected static $instance = null;
 
-  protected bool $simulateDev;
   protected array $manifest;
   protected string $outDir;
   protected string $rootDir;
@@ -17,11 +16,6 @@ class Vite {
 
   public static function getInstance() {
     return self::$instance ??= new self();
-  }
-
-  public function __construct($simulateDev = false) {
-    // `simulateDev` is only used for unit tests.
-    $this->simulateDev = $simulateDev;
   }
 
   /**
@@ -58,7 +52,7 @@ class Vite {
    */
   protected function rootDir(): string {
     return $this->rootDir ??= $this->sanitizeDir(
-      option('arnoson.kirby-vite.rootDir', '/')
+      option('arnoson.kirby-vite.rootDir', '/src')
     );
   }
 
@@ -73,14 +67,25 @@ class Vite {
   }
 
   /**
+   * Check for `.lock` file in vite's root dir as indicator for development
+   * mode.
+   */
+  protected function hasLockFile(): bool {
+    $lockFile = kirby()->root('base') . $this->rootDir() . '/.lock';
+    return F::exists($lockFile);
+  }
+
+  /**
    * Check if we're in development mode.
    */
   protected function isDev(): bool {
-    return $this->simulateDev || option('arnoson.kirby-vite.dev');
+    return option('arnoson.kirby-vite.dev') ?? $this->hasLockFile();
   }
 
   /**
    * Read and parse the manifest file.
+   *
+   * @throws Exception
    */
   protected function manifest(): array {
     if (isset($this->manifest)) {
