@@ -1,0 +1,16 @@
+{
+    "name": "arnoson/kirby-vite",
+    "description": "Vite helper for Kirby CMS",
+    "type": "kirby-plugin",
+    "license": "MIT",
+    "scripts": {
+        "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php --testdox ./tests/suites"
+    },
+    "require": {
+        "getkirby/composer-installer": "^1.1"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^9.5",
+      "getkirby/cms": "^3"
+    }
+}

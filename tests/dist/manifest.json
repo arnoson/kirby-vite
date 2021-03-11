@@ -1,0 +1,18 @@
+{
+  "index.js": {
+    "file": "assets/main.1234.js",
+    "src": "index.js",
+    "isEntry": true,
+    "css": [
+      "assets/main.1234.css"
+    ]
+  },
+  "nested/index.js": {
+    "file": "assets/nested.1234.js",
+    "src": "nested/index.js",
+    "isEntry": true,
+    "css": [
+      "assets/nested.1234.css"
+    ]
+  }
+}
