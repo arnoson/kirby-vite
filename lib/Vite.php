@@ -2,6 +2,7 @@
 
 namespace arnoson\KirbyVite;
 
+use Kirby\Http\Url;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use \Exception;
@@ -26,15 +27,7 @@ class Vite {
    * sanitizeDir('test') // => '/test'
    */
   protected function sanitizeDir(string $dir): string {
-    if (!Str::startsWith($dir, '/')) {
-      $dir = "/{$dir}";
-    }
-
-    if (Str::endsWith($dir, '/')) {
-      $dir = substr($dir, 0, -1);
-    }
-
-    return $dir;
+    return Url::path($dir, true, false);
   }
 
   /**
