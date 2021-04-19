@@ -87,7 +87,7 @@ class Vite {
    *
    * @throws Exception
    */
-  protected function manifest(): array {
+  public function manifest(): array {
     if (isset($this->manifest)) {
       return $this->manifest;
     }
