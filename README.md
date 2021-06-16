@@ -52,7 +52,7 @@ For more information and an example `vite.config.js` have a look at the [basic s
 Since version `2.3.0` you can easily support legacy browsers that do not support native ESM.
 Therefore add the [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) plugin to your project and enable the legacy option in your `config.php`:
 ```php
-arnoson.kirby-vite.legacy => true
+'arnoson.kirby-vite.legacy' => true
 ```
 Now call kirby-vite's `js()` helper as usual and make sure to add the legacy polyfills:
 
