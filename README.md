@@ -4,7 +4,7 @@ A set of helper functions to get the correct path to your versioned css and js f
 
 ## Use-cases
 
-You can use `kirby-vite` for a single or multi-page vanilla js setup or as a basis for an SPA setup. If you plan to use `Kirby` together with `Vue 3` also checkout [Johann Schopplich](https://github.com/johannschopplich)'s [Kirby + Vue 3 Starterkit](https://github.com/johannschopplich/kirby-vue3-starterkit)!
+You can use kirby-vite for a single or multi-page vanilla js setup or as a basis for an SPA setup. If you plan to use `Kirby` together with `Vue 3` also checkout [Johann Schopplich](https://github.com/johannschopplich)'s [Kirby + Vue 3 Starterkit](https://github.com/johannschopplich/kirby-vue3-starterkit)!
 
 ## Getting started
 
@@ -48,6 +48,37 @@ ln -s $PWD/src/assets ./public/assets
 ```
 For more information and an example `vite.config.js` have a look at the [basic starter kit](https://github.com/arnoson/kirby-vite-basic-kit).
 
+## Legacy build
+Since version `2.3.0` you can easily support legacy browsers that do not support native ESM.
+Therefore add the [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) plugin to your project and enable the legacy option in your `config.php`:
+```php
+arnoson.kirby-vite.legacy => true
+```
+Now call kirby-vite's `js()` helper as usual:
+
+```php
+<!-- your template -->
+<?= vite()->js() >
+```
+
+which will render:
+
+```html
+<script src="http://your-website.org/dist/assets/index.[hash].js" type="module"></script>
+<script src="http://your-website.org/dist/assets/index-legacy.[hash].js" nomodule=""></script>
+<script src="http://your-website.org/dist/assets/polyfills-legacy.[hash].js" nomodule=""></script>
+```
+
+If you want to have more control over where the legacy files are rendered, disable `arnoson.kirby-vite.legacy` and use kirby-vite's legacy helpers manually:
+
+```php
+<?= vite()->js() >
+<?= vite()->legacyJs() >
+<?= vite()->legacyPolyfills() >
+```
+
+### Known issue
+`@vitejs/plugin-legacy` will inline the css in the legacy js entry. So users with a legacy browser will download the css twice. [See this issue](https://github.com/vitejs/vite/issues/2062).
 
 ## Watch php files
 

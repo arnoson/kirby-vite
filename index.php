@@ -7,6 +7,7 @@ require_once __DIR__ . '/lib/Vite.php';
 Kirby\Cms\App::plugin('arnoson/kirby-vite', [
   'options' => [
     'entry' => 'index.js',
+    'legacy' => false,
     'outDir' => 'dist',
     'module' => true,
     'assetsDir' => 'assets'

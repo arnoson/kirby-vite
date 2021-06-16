@@ -161,6 +161,27 @@ class Vite {
       : null;
   }
 
+  public function legacyJs($entry = null, $options = []): ?string {
+    if ($this->isDev()) return null;
+
+    $entry ??= option('arnoson.kirby-vite.entry');
+    $parts = explode('.', $entry);
+    $parts[count($parts) - 2] .= '-legacy';
+    $legacyEntry = join('.', $parts);
+
+    $file = $this->assetProd($this->getManifestProperty($legacyEntry, 'file'));
+    return js($file, array_merge(['nomodule' => true], $options));
+  }
+
+  public function legacyPolyfills($options = []): ?string {
+    if ($this->isDev()) return null;
+
+    $file = $this->assetProd(
+      $this->getManifestProperty('../vite/legacy-polyfills', 'file')
+    );
+    return js($file, array_merge(['nomodule' => true], $options));
+  }
+
   /**
    * Include the js file for the specified entry.
    */
@@ -173,6 +194,10 @@ class Vite {
       $options = array_merge(['type' => 'module'], $options);
     }
 
-    return js($file, $options);
+    $legacy = option('arnoson.kirby-vite.legacy')
+      ? "\n" . $this->legacyJs($entry) . "\n" . $this->legacyPolyfills()
+      : '';
+
+    return js($file, $options) . $legacy;
   }
 }
