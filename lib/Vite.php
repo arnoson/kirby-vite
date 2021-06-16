@@ -195,7 +195,7 @@ class Vite {
     }
 
     $legacy = option('arnoson.kirby-vite.legacy')
-      ? "\n" . $this->legacyJs($entry) . "\n" . $this->legacyPolyfills()
+      ? "\n" . $this->legacyJs($entry)
       : '';
 
     return js($file, $options) . $legacy;

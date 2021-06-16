@@ -54,11 +54,12 @@ Therefore add the [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/ma
 ```php
 arnoson.kirby-vite.legacy => true
 ```
-Now call kirby-vite's `js()` helper as usual:
+Now call kirby-vite's `js()` helper as usual and make sure to add the legacy polyfills:
 
 ```php
 <!-- your template -->
 <?= vite()->js() >
+<?= vite()->legacyPolyfills() >
 ```
 
 which will render:
