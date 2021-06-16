@@ -40,11 +40,11 @@ final class ViteTest extends TestCase {
   /**
    * @dataProvider provideCssData
    */
-  // public function testCss($dev, $args, $result) {
-  //   setMode($dev ? 'development' : 'production');
-  //   $vite = new Vite();
-  //   $this->assertEquals($result, $vite->css(...$args));
-  // }
+  public function testCss($dev, $args, $result) {
+    setMode($dev ? 'development' : 'production');
+    $vite = new Vite();
+    $this->assertEquals($result, $vite->css(...$args));
+  }
 
   public function provideJsData() {
     $outDir = option('arnoson.kirby-vite.outDir');
