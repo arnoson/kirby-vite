@@ -58,8 +58,8 @@ Now call kirby-vite's `js()` helper as usual and make sure to add the legacy pol
 
 ```php
 <!-- your template -->
-<?= vite()->js() >
-<?= vite()->legacyPolyfills() >
+<?= vite()->js() ?>
+<?= vite()->legacyPolyfills() ?>
 ```
 
 which will render:
@@ -73,9 +73,9 @@ which will render:
 If you want to have more control over where the legacy files are rendered, disable `arnoson.kirby-vite.legacy` and use kirby-vite's legacy helpers manually:
 
 ```php
-<?= vite()->js() >
-<?= vite()->legacyJs() >
-<?= vite()->legacyPolyfills() >
+<?= vite()->js() ?>
+<?= vite()->legacyJs() ?>
+<?= vite()->legacyPolyfills() ?>
 ```
 
 ### Known issue
