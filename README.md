@@ -49,7 +49,7 @@ ln -s $PWD/src/assets ./public/assets
 For more information and an example `vite.config.js` have a look at the [basic starter kit](https://github.com/arnoson/kirby-vite-basic-kit).
 
 ## Legacy build
-Since version `2.3.0` you can easily support legacy browsers that do not support native ESM.
+Since version `2.4.0` you can easily support legacy browsers that do not support native ESM.
 Therefore add the [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) plugin to your project and enable the legacy option in your `config.php`:
 ```php
 'arnoson.kirby-vite.legacy' => true
