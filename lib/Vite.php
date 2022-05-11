@@ -3,8 +3,7 @@
 namespace arnoson\KirbyVite;
 
 use Kirby\Http\Url;
-use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
+use Kirby\Filesystem\F;
 use \Exception;
 
 class Vite {
