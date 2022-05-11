@@ -28,6 +28,7 @@ Then inside your template files (or anywhere else) you can use the helper functi
 ```
 
 ## Setup
+
 If you want use the plugin without one of the starter kits, you can add it to your existing kirby setup.
 
 ### Installation
@@ -43,17 +44,43 @@ Make sure you use a modern [public folder structure](https://getkirby.com/docs/g
 ### Static assets
 
 During development Kirby can't access your static files located in the src folder. Therefore it's necessary to create a symbolic link inside of the public folder:
+
 ```
 ln -s $PWD/src/assets ./public/assets
 ```
+
 For more information and an example `vite.config.js` have a look at the [basic starter kit](https://github.com/arnoson/kirby-vite-basic-kit).
 
+## Options
+
+```php
+'arnoson/kirby-vite' => [
+  // The default entry that is used when calling `vite()->js()`
+  'entry' => 'index.js',
+
+  // Wether or not to output legacy bundles automatically (see: Legacy build)
+  'legacy' => false,
+
+  // The output directory for the production assets (js, css, fonts, ...)
+  // Note: this has to match vite config's `base` and `build.outDir`
+  'outDir' => 'dist',
+
+  // Wether or not to use modern es modules
+  // Note: if you want to support older browsers you can still enabled es
+  // modules but enabled the `legacy` option
+  'module' => true
+]
+```
+
 ## Legacy build
+
 Since version `2.4.0` you can easily support legacy browsers that do not support native ESM.
 Therefore add the [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) plugin to your project and enable the legacy option in your `config.php`:
+
 ```php
 'arnoson.kirby-vite.legacy' => true
 ```
+
 Now call kirby-vite's `js()` helper as usual and make sure to add the legacy polyfills:
 
 ```php
@@ -65,9 +92,18 @@ Now call kirby-vite's `js()` helper as usual and make sure to add the legacy pol
 which will render:
 
 ```html
-<script src="http://your-website.org/dist/assets/index.[hash].js" type="module"></script>
-<script src="http://your-website.org/dist/assets/index-legacy.[hash].js" nomodule=""></script>
-<script src="http://your-website.org/dist/assets/polyfills-legacy.[hash].js" nomodule=""></script>
+<script
+  src="http://your-website.org/dist/assets/index.[hash].js"
+  type="module"
+></script>
+<script
+  src="http://your-website.org/dist/assets/index-legacy.[hash].js"
+  nomodule=""
+></script>
+<script
+  src="http://your-website.org/dist/assets/polyfills-legacy.[hash].js"
+  nomodule=""
+></script>
 ```
 
 If you want to have more control over where the legacy files are rendered, disable `arnoson.kirby-vite.legacy` and use kirby-vite's legacy helpers manually:
@@ -79,6 +115,7 @@ If you want to have more control over where the legacy files are rendered, disab
 ```
 
 ### Known issue
+
 `@vitejs/plugin-legacy` will inline the css in the legacy js entry. So users with a legacy browser will download the css twice. [See this issue](https://github.com/vitejs/vite/issues/2062).
 
 ## Watch php files
@@ -87,16 +124,16 @@ If you also want to live reload your site in development mode whenever you chang
 
 ```js
 // vite.config.js
-import liveReload from 'vite-plugin-live-reload';
+import liveReload from "vite-plugin-live-reload";
 
 export default {
   // ...
   plugins: [
     liveReload(
-      '../content/**/*',
-      '../public/site/(templates|snippets|controllers|models)/**/*.php'
-    )
-  ]
+      "../content/**/*",
+      "../public/site/(templates|snippets|controllers|models)/**/*.php"
+    ),
+  ],
 };
 ```
 
