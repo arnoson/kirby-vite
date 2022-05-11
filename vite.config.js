@@ -7,7 +7,7 @@ export default ({ mode }) => ({
 
   server: {
     port: 3000,
-    strictPort: true
+    strictPort: true,
   },
 
   build: {
@@ -15,14 +15,17 @@ export default ({ mode }) => ({
     emptyOutDir: true,
     manifest: true,
     rollupOptions: {
-      input: resolve(process.cwd(), 'src/index.js')
-    }
+      input: resolve(process.cwd(), 'src/index.js'),
+    },
   },
 
   plugins: [
-    liveReload([
-      '../content/**/*',
-      '../site/(templates|snippets|controllers|models)/**/*.php'
-    ])
-  ]
+    liveReload(
+      [
+        './content/**/*',
+        './site/(templates|snippets|controllers|models)/**/*.php',
+      ],
+      { alwaysReload: true, root: process.cwd() }
+    ),
+  ],
 })
