@@ -12,5 +12,8 @@
   },
   "config": {
     "optimize-autoloader": true
+  },
+  "require": {
+    "getkirby/composer-installer": "^1.2"
   }
 }
