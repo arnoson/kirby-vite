@@ -54,8 +54,9 @@ For more information and an example `vite.config.js` have a look at the [basic s
 ## Options
 
 ```php
-'arnoson/kirby-vite' => [
+'arnoson.kirby-vite' => [
   // The default entry that is used when calling `vite()->js()`
+  // Note: this has to match vite config's `build.rollupOptions.input`
   'entry' => 'index.js',
 
   // Wether or not to output legacy bundles automatically (see: Legacy build)
@@ -124,17 +125,17 @@ If you also want to live reload your site in development mode whenever you chang
 
 ```js
 // vite.config.js
-import liveReload from "vite-plugin-live-reload";
+import liveReload from 'vite-plugin-live-reload'
 
 export default {
   // ...
   plugins: [
     liveReload(
-      "../content/**/*",
-      "../public/site/(templates|snippets|controllers|models)/**/*.php"
+      '../content/**/*',
+      '../public/site/(templates|snippets|controllers|models)/**/*.php'
     ),
   ],
-};
+}
 ```
 
 ## Credits
