@@ -43,13 +43,20 @@ Make sure you use a modern [public folder structure](https://getkirby.com/docs/g
 
 ### Static assets
 
-During development Kirby can't access your static files located in the src folder. Therefore it's necessary to create a symbolic link inside of the public folder:
+Ensure that Vite loads assets like images and fonts from its own server in development by setting `server.origin` to match Vite server host and port:
 
-```
-ln -s $PWD/src/assets ./public/assets
+```js
+// vite.config.js
+export default {
+  // ...
+  server: {
+    // ...
+    origin: 'http://localhost:3000',
+  }
+}
 ```
 
-For more information and an example `vite.config.js` have a look at the [basic starter kit](https://github.com/arnoson/kirby-vite-basic-kit).
+See `vite.config.js` for a complete example.
 
 ## Options
 
