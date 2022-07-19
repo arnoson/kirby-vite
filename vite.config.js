@@ -6,6 +6,7 @@ export default ({ mode }) => ({
   base: mode === 'development' ? '/' : '/dist/',
 
   server: {
+    origin: 'http://localhost:3000',
     port: 3000,
     strictPort: true,
   },
