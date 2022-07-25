@@ -176,7 +176,7 @@ class Vite {
     if ($this->isDev()) return null;
 
     $file = $this->assetProd(
-      $this->getManifestProperty('../vite/legacy-polyfills', 'file')
+      $this->getManifestProperty('../vite/legacy-polyfills-legacy', 'file')
     );
     return js($file, array_merge(['nomodule' => true], $options));
   }
