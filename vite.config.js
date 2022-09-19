@@ -1,6 +1,10 @@
 import liveReload from 'vite-plugin-live-reload'
 import { resolve } from 'path'
 
+const plugin = () => {
+
+}
+
 export default ({ mode }) => ({
   root: 'src',
   base: mode === 'development' ? '/' : '/dist/',
@@ -21,6 +25,7 @@ export default ({ mode }) => ({
   },
 
   plugins: [
+    plugin(),
     liveReload(
       [
         './content/**/*',
