@@ -1,77 +1,38 @@
 <?php declare(strict_types=1);
 
 namespace arnoson\KirbyVite;
-
-use Kirby\Http\Url;
 use Kirby\Filesystem\F;
 use \Exception;
 
 class Vite {
-  protected static $instance = null;
-
-  protected array $manifest;
-  protected string $outDir;
-  protected string $rootDir;
-  protected string $devServer;
+  protected static Vite $instance;
+  protected $isFirstScript = true;
 
   public static function getInstance() {
     return self::$instance ??= new self();
   }
 
   /**
-   * Make sure, a directory starts with a slash and doesn't end with a slash.
-   *
-   * @param $dir The directory.
-   * @example
-   * sanitizeDir('test') // => '/test'
-   */
-  protected function sanitizeDir(string $dir): string {
-    return Url::path($dir, true, false);
-  }
-
-  /**
-   * Get the output directory.
-   */
-  protected function outDir(): string {
-    return $this->outDir ??= $this->sanitizeDir(
-      option('arnoson.kirby-vite.outDir', '/dist')
-    );
-  }
-
-  /**
-   * Get vite's root directory. So if vite serves our asset under
-   * `localhost:3000/src/index.js`, `src` would be the root directory.
-   */
-  protected function rootDir(): string {
-    return $this->rootDir ??= $this->sanitizeDir(
-      option('arnoson.kirby-vite.rootDir', '/src')
-    );
-  }
-
-  /**
-   * Get vite's dev server url.
-   */
-  protected function devServer(): string {
-    return $this->devServer ??= option(
-      'arnoson.kirby-vite.devServer',
-      'http://localhost:3000'
-    );
-  }
-
-  /**
-   * Check for `.lock` file in vite's root dir as indicator for development
-   * mode.
-   */
-  protected function hasLockFile(): bool {
-    $lockFile = kirby()->root('base') . $this->rootDir() . '/.lock';
-    return F::exists($lockFile);
-  }
-
-  /**
    * Check if we're in development mode.
    */
   protected function isDev(): bool {
-    return option('arnoson.kirby-vite.dev') ?? $this->hasLockFile();
+    return F::exists(kirby()->root('base') . '/.dev');
+  }
+
+  /**
+   * Read vite's dev server from the `.dev` file.
+   *
+   * @throws Exception
+   */  
+  protected function server() {
+    $dev = F::read(kirby()->root('base') . '/.dev');
+
+    [$key, $value] = explode('=', trim($dev), 2);
+    if ($key !== 'VITE_SERVER' && option('debug')) {
+      throw new Exception('VITE_SERVER not found in `.dev` file.');
+    }
+
+    return $value;
   }
 
   /**
@@ -79,29 +40,29 @@ class Vite {
    *
    * @throws Exception
    */
-  public function manifest(): array {
+  protected function manifest(): array {
     if (isset($this->manifest)) {
       return $this->manifest;
     }
 
-    $manifestPath = kirby()->root() . $this->outDir() . '/manifest.json';
+    $manifestPath = kirby()->root('index') . '/' . option('arnoson.kirby-vite.outDir', 'dist') . '/manifest.json';
 
     if (!F::exists($manifestPath)) {
       if (option('debug')) {
-        throw new Exception('The `manifest.json` does not exist.');
+        throw new Exception('`manifest.json` not found.');
       }
       return [];
     }
 
     return $this->manifest = json_decode(F::read($manifestPath), true);
   }
-
+  
   /**
    * Get the value of a manifest property for a specific entry.
    *
    * @throws Exception
    */
-  protected function getManifestProperty(string $entry = null, $key = 'file') {
+  protected function manifestProperty(string $entry = null, $key = 'file') {
     $entry ??= option('arnoson.kirby-vite.entry');
     $manifestEntry = $this->manifest()[$entry] ?? null;
     if (!$manifestEntry) {
@@ -114,9 +75,7 @@ class Vite {
     $value = $manifestEntry[$key] ?? null;
     if (!$value) {
       if (option('debug')) {
-        throw new Exception(
-          "Manifest entry `$entry` doesn't have property `$key`."
-        );
+        throw new Exception("{$key} not found in manifest entry {$entry}");
       }
       return;
     }
@@ -128,25 +87,51 @@ class Vite {
    * Get the url for the specified file for development mode.
    */
   protected function assetDev(string $file) {
-    return $this->devServer() . "/$file";
+    return $this->server() . "/$file";
   }
 
   /**
    * Get the URL for the specified file for production mode.
    */
   protected function assetProd(string $file) {
-    $root = kirby()->url('index');
-    return ($root === '/' ? '' : $root) . $this->outDir() . "/$file";
+    return '/' . option('arnoson.kirby-vite.outDir', 'dist') . "/$file";
   }
 
   /**
    * Include vite's client in development mode.
    */
-  public function client(): ?string {
+  protected function client(): ?string {
     return $this->isDev()
       ? js($this->assetDev('@vite/client'), ['type' => 'module'])
       : null;
   }
+
+  /**
+   * Include the js file for the specified entry.
+   */
+  public function js($entry = null, $options = []): ?string {
+    $file = $this->isDev()
+      ? $this->assetDev($entry ?? option('arnoson.kirby-vite.entry'))
+      : $this->assetProd($this->manifestProperty($entry, 'file'));
+
+    if ($this->isDev() || option('arnoson.kirby-vite.module')) {
+      $options = array_merge(['type' => 'module'], $options);
+    }
+
+    $legacy = option('arnoson.kirby-vite.legacy'); 
+    // There might be multiple `vite()->js()` calls but some scripts
+    // (vite client, legacy polyfills) should be only included once per page.
+    $scripts = [
+      $this->isFirstScript ? $this->client() : null,
+      ($this->isFirstScript && $legacy) ? $this->legacyPolyfills() : null,
+      $legacy ? $this->legacyJs($entry) : null,
+      js($file, $options)
+    ];
+
+    $this->isFirstScript = false;
+    return implode("\n", array_filter($scripts));
+
+  }  
 
   /**
    * Include the css file for the specified entry in production mode.
@@ -154,10 +139,19 @@ class Vite {
   public function css($entry = null, array $options = null): ?string {
     return !$this->isDev()
       ? css(
-        $this->assetProd($this->getManifestProperty($entry, 'css')[0]),
+        $this->assetProd($this->manifestProperty($entry, 'css')[0]),
         $options
       )
       : null;
+  }
+
+  public function legacyPolyfills($options = []): ?string {
+    if ($this->isDev()) return null;
+
+    $file = $this->assetProd(
+      $this->manifestProperty('../vite/legacy-polyfills-legacy', 'file')
+    );
+    return js($file, array_merge(['nomodule' => true], $options));
   }
 
   public function legacyJs($entry = null, $options = []): ?string {
@@ -168,35 +162,7 @@ class Vite {
     $parts[count($parts) - 2] .= '-legacy';
     $legacyEntry = join('.', $parts);
 
-    $file = $this->assetProd($this->getManifestProperty($legacyEntry, 'file'));
+    $file = $this->assetProd($this->manifestProperty($legacyEntry, 'file'));
     return js($file, array_merge(['nomodule' => true], $options));
-  }
-
-  public function legacyPolyfills($options = []): ?string {
-    if ($this->isDev()) return null;
-
-    $file = $this->assetProd(
-      $this->getManifestProperty('../vite/legacy-polyfills-legacy', 'file')
-    );
-    return js($file, array_merge(['nomodule' => true], $options));
-  }
-
-  /**
-   * Include the js file for the specified entry.
-   */
-  public function js($entry = null, $options = []): ?string {
-    $file = $this->isDev()
-      ? $this->assetDev($entry ?? option('arnoson.kirby-vite.entry'))
-      : $this->assetProd($this->getManifestProperty($entry, 'file'));
-
-    if ($this->isDev() || option('arnoson.kirby-vite.module')) {
-      $options = array_merge(['type' => 'module'], $options);
-    }
-
-    $legacy = option('arnoson.kirby-vite.legacy')
-      ? "\n" . $this->legacyJs($entry)
-      : '';
-
-    return js($file, $options) . $legacy;
-  }
+  }  
 }

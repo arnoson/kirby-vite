@@ -1,5 +1,6 @@
 <?php
 
 return [
-  'debug' => true
+  'debug' => true,
+  'arnoson.kirby-vite.legacy' => true
 ];

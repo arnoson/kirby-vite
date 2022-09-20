@@ -7,27 +7,13 @@ use arnoson\KirbyVite\Vite;
 
 function setMode($mode) {
   if ($mode === 'development') {
-    $file = fopen(dirname(__DIR__, 2) . '/src/.lock', 'w');
-    fclose($file);    
+    file_put_contents(dirname(__DIR__, 2) . '/.dev', "VITE_SERVER=http://localhost:5173");  
   } else if ($mode === 'production') {
-    @unlink(dirname(__DIR__, 2) . '/src/.lock');
+    @unlink(dirname(__DIR__, 2) . '/.dev');
   }
 }
 
 final class ViteTest extends TestCase {
-  public function testClient() {
-    setMode('production');
-    $vite = new Vite();
-    $this->assertEquals(null, $vite->client());
-
-    setMode('development');
-    $vite = new Vite();
-    $this->assertEquals(
-      '<script src="http://localhost:3000/@vite/client" type="module"></script>',
-      $vite->client()
-    );
-  }
-
   /**
    * @dataProvider provideJsData
    */
@@ -48,7 +34,7 @@ final class ViteTest extends TestCase {
 
   public function provideJsData() {
     $outDir = option('arnoson.kirby-vite.outDir');
-    $devServer = 'http://localhost:3000';
+    $devServer = 'http://localhost:5173';
 
     return [
       'production' => [
@@ -74,7 +60,7 @@ final class ViteTest extends TestCase {
       'development' => [
         true,
         [],
-        "<script src=\"$devServer/index.js\" type=\"module\"></script>"
+        "<script src=\"http://localhost:5173/@vite/client\" type=\"module\"></script>\n<script src=\"$devServer/index.js\" type=\"module\"></script>"
       ]
     ];
   }

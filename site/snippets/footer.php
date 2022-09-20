@@ -1,3 +1,2 @@
-  <?= vite()->js() ?>
  </body>
- </html> 
+ </html>
