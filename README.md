@@ -132,11 +132,13 @@ If you want to have more control over where the legacy files are rendered, disab
 
 `@vitejs/plugin-legacy` will inline the css in the legacy js entry. So users with a legacy browser will download the css twice. [See this issue](https://github.com/vitejs/vite/issues/2062).
 
-## Watch php files
+## Watch files
 
 vite-plugin-kirby automatically uses vite-plugin-live-reload to watch the following paths:
 - `site/(templates|snippets|controllers|models|layouts)/**/*.php`
 - `content/**/*`
+
+To disable file watching or define your own paths, [configure](https://github.com/arnoson/vite-plugin-kirby#watch-files) vite-plugin-kirby.
 
 ## Credits
 
