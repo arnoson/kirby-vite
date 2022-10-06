@@ -1,8 +1,14 @@
 {
   "name": "arnoson/kirby-vite",
   "description": "Vite helper for Kirby CMS",
+  "version": "3.0.0",
   "type": "kirby-plugin",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Arno Schlipf"
+    }
+  ],
   "scripts": {
     "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php --testdox ./tests/suites"
   },
