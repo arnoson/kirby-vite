@@ -147,10 +147,19 @@ class Vite {
 
   public function legacyPolyfills($options = []): ?string {
     if ($this->isDev()) return null;
+    
+    $entry = null;
+    foreach (array_keys($this->manifest()) as $key) {
+      // The legacy entry is relative from vite's root folder (e.g.:
+      // `../vite/legacy-polyfills-legacy`). To handle all cases we just check
+      // for the ending.
+      if (str_ends_with($key, "vite/legacy-polyfills-legacy")) {
+        $entry = $key;
+        break;
+      }  
+    }
+    $file = $this->assetProd($this->manifestProperty($entry, 'file'));
 
-    $file = $this->assetProd(
-      $this->manifestProperty('../vite/legacy-polyfills-legacy', 'file')
-    );
     return js($file, array_merge(['nomodule' => true], $options));
   }
 
