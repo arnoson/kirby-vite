@@ -7,6 +7,7 @@ use \Exception;
 class Vite {
   protected static Vite $instance;
   protected $isFirstScript = true;
+  protected ?array $manifest = null;
 
   public static function getInstance() {
     return self::$instance ??= new self();
