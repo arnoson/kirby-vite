@@ -17,7 +17,8 @@ class Vite {
    * Check if we're in development mode.
    */
   protected function isDev(): bool {
-    return F::exists(kirby()->root('base') . '/.dev');
+    $devDir = kirby()->root('base') ?? kirby()->root('index');
+    return F::exists("$devDir/.dev");
   }
 
   /**
@@ -26,7 +27,8 @@ class Vite {
    * @throws Exception
    */  
   protected function server() {
-    $dev = F::read(kirby()->root('base') . '/.dev');
+    $devDir = kirby()->root('base') ?? kirby()->root('index');
+    $dev = F::read("$devDir/.dev");
 
     [$key, $value] = explode('=', trim($dev), 2);
     if ($key !== 'VITE_SERVER' && option('debug')) {
