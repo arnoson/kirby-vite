@@ -17,7 +17,7 @@ class Vite {
    * Check if we're in development mode.
    */
   protected function isDev(): bool {
-    return F::exists(kirby()->root('base') . '/.dev');
+    return F::exists(kirby()->root() . '/.dev');
   }
 
   /**
@@ -26,7 +26,7 @@ class Vite {
    * @throws Exception
    */  
   protected function server() {
-    $dev = F::read(kirby()->root('base') . '/.dev');
+    $dev = F::read(kirby()->root() . '/.dev');
 
     [$key, $value] = explode('=', trim($dev), 2);
     if ($key !== 'VITE_SERVER' && option('debug')) {
@@ -46,7 +46,7 @@ class Vite {
       return $this->manifest;
     }
 
-    $manifestPath = kirby()->root('index') . '/' . option('arnoson.kirby-vite.outDir', 'dist') . '/manifest.json';
+    $manifestPath = kirby()->root() . '/' . option('arnoson.kirby-vite.outDir', 'dist') . '/manifest.json';
 
     if (!F::exists($manifestPath)) {
       if (option('debug')) {
