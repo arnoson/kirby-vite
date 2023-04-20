@@ -13,7 +13,7 @@
     "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php --testdox ./tests/suites"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5",
+    "phpunit/phpunit": "^10.0",
     "getkirby/cms": "^3.8"
   },
   "config": {
