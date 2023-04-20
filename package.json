@@ -7,12 +7,15 @@
     "dev": "concurrently \"npm:server\" \"npm:vite\"",
     "server": "php -S localhost:8888 -t public server.php",
     "build": "vite build",
-    "preview": "npm run build && npm run server"
+    "preview": "npm run build && npm run server",
+    "test": "composer run test",
+    "release": "bumpp composer.json --no-push"
   },
   "author": "arnoson",
   "license": "MIT",
   "devDependencies": {
     "@vitejs/plugin-legacy": "^2.2.0",
+    "bumpp": "^9.1.0",
     "concurrently": "^7.0.0",
     "vite": "^3.0.0"
   },
