@@ -133,6 +133,14 @@ If you want to have more control over where the legacy files are rendered, disab
 <?= vite()->js() ?>
 ```
 
+## Asset file paths
+
+Sometimes you might want to access the (hashed) file path of your assets, e.g. to preload fonts. You can do so with `vite()->file()`:
+
+```php
+ <link rel="preload" href="<?= vite()->file('my-font.woff2') ?>" as="font" type="font/woff2" crossorigin>
+```
+
 ### Known issue
 
 `@vitejs/plugin-legacy` will inline the css in the legacy js entry. So users with a legacy browser will download the css twice. [See this issue](https://github.com/vitejs/vite/issues/2062).
