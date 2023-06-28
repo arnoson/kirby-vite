@@ -14,13 +14,13 @@
   "author": "arnoson",
   "license": "MIT",
   "devDependencies": {
-    "@vitejs/plugin-legacy": "^2.2.0",
+    "@vitejs/plugin-legacy": "^4.0.5",
     "bumpp": "^9.1.0",
-    "concurrently": "^7.0.0",
-    "vite": "^3.0.0"
+    "concurrently": "^8.2.0",
+    "vite": "^4.3.9"
   },
   "dependencies": {
-    "vite-plugin-kirby": "^0.1.1",
+    "vite-plugin-kirby": "^0.2.1",
     "vite-plugin-live-reload": "^3.0.0"
   }
 }
