@@ -32,7 +32,25 @@ final class ViteTest extends TestCase {
     $this->assertEquals($result, $vite->css(...$args));
   }
 
-  public function provideJsData() {
+  public function testFile() {
+    $outDir = option('arnoson.kirby-vite.outDir');
+    $devServer = 'http://localhost:5173';
+    $vite = new Vite();
+
+    setMode('development');
+    $this->assertEquals(
+      "$devServer/my-font.woff2",
+      $vite->file('my-font.woff2')
+    );
+
+    setMode('production');
+    $this->assertEquals(
+      "/$outDir/assets/my-font.1234.woff2",
+      $vite->file('my-font.woff2')
+    );
+  }
+
+  static public function provideJsData() {
     $outDir = option('arnoson.kirby-vite.outDir');
     $devServer = 'http://localhost:5173';
 
@@ -65,7 +83,7 @@ final class ViteTest extends TestCase {
     ];
   }
 
-  public function provideCssData() {
+  static public function provideCssData() {
     $outDir = option('arnoson.kirby-vite.outDir');
 
     return [

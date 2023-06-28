@@ -148,6 +148,15 @@ class Vite {
       : null;
   }
 
+  /**
+   * Return manifest file path for entry.
+   */
+  public function file($entry = null): string {
+    return $this->isDev()
+      ? $this->assetDev($entry)
+      : $this->assetProd($this->manifestProperty($entry, 'file'));
+  }
+
   public function legacyPolyfills($options = []): ?string {
     if ($this->isDev()) return null;
     

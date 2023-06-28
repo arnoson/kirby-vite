@@ -14,5 +14,9 @@
     "css": [
       "assets/nested.1234.css"
     ]
-  }
+  },
+  "my-font.woff2": {
+    "file": "assets/my-font.1234.woff2",
+    "src": "my-font.woff2"
+  }  
 }
