@@ -23,10 +23,10 @@ Then inside your template files (or anywhere else) you can use the helper functi
 ```php
 <html>
   <head>
-    <?= vite()->css() ?>
+    <?= vite()->css('index.css') ?>
   </head>
   <body>
-    <?= vite()->js() ?>
+    <?= vite()->js('index.js') ?>
   </body>
 </html>
 ```
@@ -105,7 +105,7 @@ Now call kirby-vite's `js()` helper as usual.
 
 ```php
 <!-- your template -->
-<?= vite()->js() ?>
+<?= vite()->js('index.js') ?>
 ```
 
 which will render:
@@ -129,8 +129,8 @@ If you want to have more control over where the legacy files are rendered, disab
 
 ```php
 <?= vite()->legacyPolyfills() ?>
-<?= vite()->legacyJs() ?>
-<?= vite()->js() ?>
+<?= vite()->legacyJs('index.js') ?>
+<?= vite()->js('index.js') ?>
 ```
 
 ## Asset file paths
