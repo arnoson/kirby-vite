@@ -2,6 +2,7 @@
 node_modules/
 .phpunit.cache
 .dev
+.vscode/.server-controller-port.log
 
 # Frontend
 /public/assets
