@@ -1,5 +1,5 @@
 <?php return [
+  'outDir' => 'public/dist',
   'assetsDir' => 'assets',
-  'outDir' => 'dist',
   'legacy' => false,
 ];
