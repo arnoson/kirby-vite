@@ -1,0 +1,45 @@
+{
+  "name": "vite-plugin-kirby",
+  "version": "0.2.1",
+  "packageManager": "pnpm@7.17.0",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "vite",
+    "kirby",
+    "plugin"
+  ],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --clean --dts"
+  },
+  "author": "arnoson",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnoson/kirby-vite.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@vitejs/plugin-legacy": "^4.1.1",
+    "bumpp": "^9.1.0",
+    "picocolors": "^1.0.0",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.3",
+    "vite": "^4.2.1"
+  },
+  "homepage": "https://github.com/arnoson/vite-plugin-kirby#readme",
+  "dependencies": {
+    "vite-plugin-live-reload": "^3.0.2"
+  }
+}

@@ -8,9 +8,15 @@ class Vite {
   protected static Vite $instance;
   protected $isFirstScript = true;
   protected ?array $manifest = null;
+  protected ?array $config = null;
 
   public static function getInstance() {
     return self::$instance ??= new self();
+  }
+
+  protected function config() {
+    return $this->config ??= require kirby()->root('config') .
+      '/vite.config.php';
   }
 
   /**
@@ -25,7 +31,7 @@ class Vite {
    * Read vite's dev server from the `.dev` file.
    *
    * @throws Exception
-   */  
+   */
   protected function server() {
     $devDir = kirby()->root('base') ?? kirby()->root('index');
     $dev = F::read("$devDir/.dev");
@@ -48,7 +54,9 @@ class Vite {
       return $this->manifest;
     }
 
-    $manifestPath = kirby()->root('index') . '/' . option('arnoson.kirby-vite.outDir', 'dist') . '/manifest.json';
+    $index = kirby()->root('index');
+    $outDir = $this->config()['outDir'];
+    $manifestPath = "$index/$outDir/manifest.json";
 
     if (!F::exists($manifestPath)) {
       if (option('debug')) {
@@ -59,7 +67,7 @@ class Vite {
 
     return $this->manifest = json_decode(F::read($manifestPath), true);
   }
-  
+
   /**
    * Get the value of a manifest property for a specific entry.
    *
@@ -96,7 +104,8 @@ class Vite {
    * Get the URL for the specified file for production mode.
    */
   protected function assetProd(string $file) {
-    return '/' . option('arnoson.kirby-vite.outDir', 'dist') . "/$file";
+    $outDir = $this->config()['outDir'];
+    return "/$outDir/$file";
   }
 
   /**
@@ -113,32 +122,27 @@ class Vite {
    */
   public function js(string $entry, $options = []): ?string {
     $file = $this->file($entry);
+    $options = array_merge(['type' => 'module'], $options);
 
-    if ($this->isDev() || option('arnoson.kirby-vite.module')) {
-      $options = array_merge(['type' => 'module'], $options);
-    }
-
-    $legacy = option('arnoson.kirby-vite.legacy'); 
+    $legacy = $this->config()['legacy'];
     // There might be multiple `vite()->js()` calls but some scripts
     // (vite client, legacy polyfills) should be only included once per page.
     $scripts = [
       $this->isFirstScript ? $this->client() : null,
-      ($this->isFirstScript && $legacy) ? $this->legacyPolyfills() : null,
+      $this->isFirstScript && $legacy ? $this->legacyPolyfills() : null,
       $legacy ? $this->legacyJs($entry) : null,
-      js($file, $options)
+      js($file, $options),
     ];
 
     $this->isFirstScript = false;
     return implode("\n", array_filter($scripts));
-  }  
+  }
 
   /**
    * Include the css file for the specified entry in production mode.
    */
   public function css(string $entry, array $options = null): ?string {
-    return !$this->isDev()
-      ? css($this->file($entry), $options)
-      : null;
+    return !$this->isDev() ? css($this->file($entry), $options) : null;
   }
 
   /**
@@ -151,27 +155,33 @@ class Vite {
   }
 
   public function legacyPolyfills($options = []): ?string {
-    if ($this->isDev()) return null;
-    
+    if ($this->isDev()) {
+      return null;
+    }
+
     $entry = null;
     foreach (array_keys($this->manifest()) as $key) {
       // The legacy entry is relative from vite's root folder (e.g.:
       // `../vite/legacy-polyfills-legacy`). To handle all cases we just check
       // for the ending.
-      if (str_ends_with($key, "vite/legacy-polyfills-legacy")) {
+      if (str_ends_with($key, 'vite/legacy-polyfills-legacy')) {
         $entry = $key;
         break;
-      }  
+      }
     }
 
     // Polyfills entry is only generated if any polyfills are used.
-    if (!$entry) return null;
+    if (!$entry) {
+      return null;
+    }
 
     return js($entry, array_merge(['nomodule' => true], $options));
   }
 
   public function legacyJs(string $entry, $options = []): ?string {
-    if ($this->isDev()) return null;
+    if ($this->isDev()) {
+      return null;
+    }
 
     $parts = explode('.', $entry);
     $parts[count($parts) - 2] .= '-legacy';
@@ -179,5 +189,5 @@ class Vite {
     $file = $this->file($legacyEntry);
 
     return js($file, array_merge(['nomodule' => true], $options));
-  }  
+  }
 }

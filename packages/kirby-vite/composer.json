@@ -1,0 +1,19 @@
+{
+  "require": {
+    "getkirby/composer-installer": "^1.2"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "vendor/bin/pest"
+  },
+  "require-dev": {
+    "getkirby/cms": "^3.9",
+    "pestphp/pest": "^2.4"
+  },
+  "config": {
+    "allow-plugins": {
+      "getkirby/composer-installer": true,
+      "pestphp/pest-plugin": true
+    }
+  }
+}

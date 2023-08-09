@@ -22,6 +22,7 @@ jobs:
 
       - name: Install composer Dependencies
         run: composer install --prefer-dist --no-progress
+        working-directory: packages/kirby-vite
 
       - name: Test
         run: composer run test

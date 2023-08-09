@@ -1,11 +1,8 @@
-content export-ignore
-site export-ignore
-src export-ignore
-public export-ignore
-storage export-ignore
+/.* export-ignore
+/package.json export-ignore
+/packages/vite-plugin-kirby export-ignore
 
-.editorconfig export-ignore
-.gitattributes export-ignore
-.gitignore export-ignore
-package.json export-ignore
-package-lock.json export-ignore
+/packages/kirby-vite/.* export-ignore
+/packages/kirby-vite/test export-ignore
+/packages/kirby-vite/composer.json export-ignore
+/packages/kirby-vite/package.json export-ignore

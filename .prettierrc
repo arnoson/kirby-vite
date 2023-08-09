@@ -1,4 +1,6 @@
 {
   "semi": false,
-  "singleQuote": true
+  "singleQuote": true,
+  "braceStyle": "1tbs",
+  "tabWidth": 2
 }

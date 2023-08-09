@@ -1,31 +1,4 @@
-.DS_Store
-node_modules/
-.phpunit.cache
-.dev
-.vscode/.server-controller-port.log
-
-# Frontend
-/public/assets
-/public/dist/
-
-# Kirby
-.lock
-kirby
+node_modules
 vendor
-
-/public/media/*
-!/public/media/index.html
-
-/storage/accounts/*
-!/storage/accounts/.gitkeep
-
-/storage/cache/*
-!/storage/cache/.gitkeep
-
-/storage/logs/*
-!/storage/logs/.gitkeep
-
-/storage/sessions/*
-!/storage/sessions/.gitkeep
-
-/site/config/.license
+dist
+.server-controller-port.log

@@ -1,26 +1,12 @@
 {
-  "name": "kirby-vite-basic-kit",
-  "version": "1.0.0",
-  "main": "vite.config.js",
+  "version": "3.1.0",
   "scripts": {
-    "vite": "vite",
-    "dev": "concurrently \"npm:server\" \"npm:vite\"",
-    "server": "php -S localhost:8888 -t public server.php",
-    "build": "vite build",
-    "preview": "npm run build && npm run server",
     "test": "composer run test",
-    "release": "bumpp composer.json --no-push"
+    "release": "bumpp --no-push -r"
   },
-  "author": "arnoson",
-  "license": "MIT",
   "devDependencies": {
-    "@vitejs/plugin-legacy": "^4.0.5",
-    "bumpp": "^9.1.0",
-    "concurrently": "^8.2.0",
-    "vite": "^4.3.9"
-  },
-  "dependencies": {
-    "vite-plugin-kirby": "^0.2.1",
-    "vite-plugin-live-reload": "^3.0.0"
+    "@prettier/plugin-php": "^0.19.6",
+    "bumpp": "^9.1.1",
+    "prettier": "^2.0"
   }
 }
