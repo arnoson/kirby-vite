@@ -10,7 +10,7 @@ export default ({ mode }) => ({
     outDir: resolve(process.cwd(), 'public/dist'),
     emptyOutDir: true,
     rollupOptions: {
-      input: resolve(process.cwd(), 'src/index.js'),
+      input: ['src/index.js', 'src/index.css'],
     },
   },
 
