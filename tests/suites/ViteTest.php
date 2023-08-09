@@ -57,28 +57,18 @@ final class ViteTest extends TestCase {
     return [
       'production' => [
         false,
-        [],
+        ['main.js'],
         "<script src=\"/$outDir/assets/main.1234.js\" type=\"module\"></script>"
       ],
       'production, options' => [
         false,
-        [null, ['async' => true]],
+        ['main.js', ['async' => true]],
         "<script async src=\"/$outDir/assets/main.1234.js\" type=\"module\"></script>"
-      ],
-      'production, entry' => [
-        false,
-        ['nested/index.js'],
-        "<script src=\"/$outDir/assets/nested.1234.js\" type=\"module\"></script>"
-      ],
-      'production, entry, options' => [
-        false,
-        ['nested/index.js', ['async' => true]],
-        "<script async src=\"/$outDir/assets/nested.1234.js\" type=\"module\"></script>"
       ],
       'development' => [
         true,
-        [],
-        "<script src=\"http://localhost:5173/@vite/client\" type=\"module\"></script>\n<script src=\"$devServer/index.js\" type=\"module\"></script>"
+        ['main.js'],
+        "<script src=\"http://localhost:5173/@vite/client\" type=\"module\"></script>\n<script src=\"$devServer/main.js\" type=\"module\"></script>"
       ]
     ];
   }
@@ -89,25 +79,19 @@ final class ViteTest extends TestCase {
     return [
       'production' => [
         false,
-        [],
+        ['main.css'],
         "<link href=\"/$outDir/assets/main.1234.css\" rel=\"stylesheet\">"
       ],
       'production, options' => [
         false,
-        [null, ['media' => 'print']],
+        ['main.css', ['media' => 'print']],
         "<link href=\"/$outDir/assets/main.1234.css\" media=\"print\" rel=\"stylesheet\">"
       ],
-      'production, entry' => [
-        false,
-        ['nested/index.js'],
-        "<link href=\"/$outDir/assets/nested.1234.css\" rel=\"stylesheet\">"
-      ],
-      'production, entry, options' => [
-        false,
-        ['nested/index.js', ['media' => 'print']],
-        "<link href=\"/$outDir/assets/nested.1234.css\" media=\"print\" rel=\"stylesheet\">"
-      ],
-      'development' => [true, [], null]
+      'development' => [
+        true,
+        ['main.css'],
+        null
+      ]
     ];
   }
 }
