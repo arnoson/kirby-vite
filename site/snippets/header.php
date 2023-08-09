@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kirby Vite Basic</title>
-  <?= vite()->js(null, ['defer' => true]) ?>
-  <?= vite()->css() ?>
+  <?= vite()->js('index.js', ['defer' => true]) ?>
+  <?= vite()->css('index.css') ?>
 </head>
 <body>

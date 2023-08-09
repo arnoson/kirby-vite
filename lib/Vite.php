@@ -65,8 +65,7 @@ class Vite {
    *
    * @throws Exception
    */
-  protected function manifestProperty(string $entry = null, $key = 'file') {
-    $entry ??= option('arnoson.kirby-vite.entry');
+  protected function manifestProperty(string $entry, $key = 'file') {
     $manifestEntry = $this->manifest()[$entry] ?? null;
     if (!$manifestEntry) {
       if (option('debug')) {
@@ -78,7 +77,7 @@ class Vite {
     $value = $manifestEntry[$key] ?? null;
     if (!$value) {
       if (option('debug')) {
-        throw new Exception("{$key} not found in manifest entry {$entry}");
+        throw new Exception("`$key` not found in manifest entry `$entry`");
       }
       return;
     }
@@ -112,10 +111,8 @@ class Vite {
   /**
    * Include the js file for the specified entry.
    */
-  public function js($entry = null, $options = []): ?string {
-    $file = $this->isDev()
-      ? $this->assetDev($entry ?? option('arnoson.kirby-vite.entry'))
-      : $this->assetProd($this->manifestProperty($entry, 'file'));
+  public function js(string $entry, $options = []): ?string {
+    $file = $this->file($entry);
 
     if ($this->isDev() || option('arnoson.kirby-vite.module')) {
       $options = array_merge(['type' => 'module'], $options);
@@ -133,25 +130,21 @@ class Vite {
 
     $this->isFirstScript = false;
     return implode("\n", array_filter($scripts));
-
   }  
 
   /**
    * Include the css file for the specified entry in production mode.
    */
-  public function css($entry = null, array $options = null): ?string {
+  public function css(string $entry, array $options = null): ?string {
     return !$this->isDev()
-      ? css(
-        $this->assetProd($this->manifestProperty($entry, 'file')),
-        $options
-      )
+      ? css($this->file($entry), $options)
       : null;
   }
 
   /**
    * Return manifest file path for entry.
    */
-  public function file($entry = null): string {
+  public function file(string $entry): string {
     return $this->isDev()
       ? $this->assetDev($entry)
       : $this->assetProd($this->manifestProperty($entry, 'file'));
@@ -170,20 +163,21 @@ class Vite {
         break;
       }  
     }
-    $file = $this->assetProd($this->manifestProperty($entry, 'file'));
 
-    return js($file, array_merge(['nomodule' => true], $options));
+    // Polyfills entry is only generated if any polyfills are used.
+    if (!$entry) return null;
+
+    return js($entry, array_merge(['nomodule' => true], $options));
   }
 
-  public function legacyJs($entry = null, $options = []): ?string {
+  public function legacyJs(string $entry, $options = []): ?string {
     if ($this->isDev()) return null;
 
-    $entry ??= option('arnoson.kirby-vite.entry');
     $parts = explode('.', $entry);
     $parts[count($parts) - 2] .= '-legacy';
     $legacyEntry = join('.', $parts);
+    $file = $this->file($legacyEntry);
 
-    $file = $this->assetProd($this->manifestProperty($legacyEntry, 'file'));
     return js($file, array_merge(['nomodule' => true], $options));
   }  
 }
