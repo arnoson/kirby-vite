@@ -58,47 +58,57 @@ kirby-vite uses a file named `.dev` (created automatically by vite-plugin-kirby)
 - when the file exists, it will run in development mode
 - when the file doesn’t exists, it will run in production mode
 
+### Config
+
+All configuration is done in the `vite.config.js`:
+
 ```js
+// vite.config.js
 import kirby from 'vite-plugin-kirby'
 
-// vite.config.js
 export default {
-  // ...
-  plugins: [kirby()]
+  build: {
+    // Where your manifest an bundled assets will be placed.
+    outDir: 'public/dist',
+    assetsDir: 'assets'
+  }
+
+  plugins: [kirby({
+    // By default Kirby's templates, snippets, controllers, models, layouts and
+    // everything inside the content folder will be watched and a full reload
+    // triggered. All paths are relative to Vite's root folder.
+    watch: [
+      '../site/(templates|snippets|controllers|models|layouts)/**/*.php',
+      '../content/**/*',
+    ]
+    // or disable watching
+    watch: false,
+
+    // Where the automatically generated `vite.config.php` file should be
+    // placed. This has to match Kirby's config folder!
+    kirbyConfigDir: 'site/config' // default
+  })],
 }
 ```
 
-See `vite.config.js` for a complete example.
-
-## Options
-
-```php
-'arnoson.kirby-vite' => [
-  // The default entry that is used when calling `vite()->js()`
-  // Note: this has to match Vite config's `build.rollupOptions.input`
-  'entry' => 'index.js',
-
-  // Wether or not to output legacy bundles automatically (see: Legacy build)
-  'legacy' => false,
-
-  // The output directory for the production assets (js, css, fonts, ...)
-  // Note: this has to match Vite config's `base` and `build.outDir`
-  'outDir' => 'dist',
-
-  // Wether or not to use modern es modules
-  // Note: if you want to support older browsers you can still enabled es
-  // modules but enabled the `legacy` option
-  'module' => true
-]
-```
+`vite-plugin-kirby` shares part of this config with Kirby, by dynamically creating a `site/config/vite.config.php` file.
 
 ## Legacy build
 
 Since version `2.4.0` you can easily support legacy browsers that do not support native ESM.
-Therefore add the [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) plugin to your project and enable the legacy option in your `config.php`:
+Just add the [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) plugin to your `vite.config.js`:
 
-```php
-'arnoson.kirby-vite.legacy' => true
+```js
+import legacy from '@vitejs/plugin-legacy'
+
+// vite.config.js
+export default {
+  // ...
+  plugins: [
+    // ...
+    legacy(),
+  ],
+}
 ```
 
 Now call kirby-vite's `js()` helper as usual.
@@ -125,14 +135,6 @@ which will render:
 ></script>
 ```
 
-If you want to have more control over where the legacy files are rendered, disable `arnoson.kirby-vite.legacy` and use Kirby-Vite's legacy helpers manually:
-
-```php
-<?= vite()->legacyPolyfills() ?>
-<?= vite()->legacyJs('index.js') ?>
-<?= vite()->js('index.js') ?>
-```
-
 ## Asset file paths
 
 Sometimes you might want to access the (hashed) file path of your assets, e.g. to preload fonts. You can do so with `vite()->file()`:
@@ -148,6 +150,7 @@ Sometimes you might want to access the (hashed) file path of your assets, e.g. t
 ## Watch files
 
 vite-plugin-kirby automatically uses vite-plugin-live-reload to watch the following paths:
+
 - `site/(templates|snippets|controllers|models|layouts)/**/*.php`
 - `content/**/*`
 
