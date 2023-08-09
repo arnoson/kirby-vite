@@ -142,7 +142,7 @@ class Vite {
   public function css($entry = null, array $options = null): ?string {
     return !$this->isDev()
       ? css(
-        $this->assetProd($this->manifestProperty($entry, 'css')[0]),
+        $this->assetProd($this->manifestProperty($entry, 'file')),
         $options
       )
       : null;
