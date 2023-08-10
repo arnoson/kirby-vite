@@ -169,10 +169,25 @@ class Vite {
   }
 
   /**
-   * Include the css file for the specified entry in production mode.
+   * Include the css file for the specified entry in production mode. Your CSS
+   * file can either be CSS entry `vite()->css('main.css')` or a js entry
+   * `vite()->css('main.js')`, in this case the CSS imported in the JS file will
+   *  be used.
    */
   public function css(string $entry, array $options = null): ?string {
-    return !$this->isDev() ? css($this->file($entry), $options) : null;
+    if ($this->isDev()) {
+      return null;
+    }
+
+    $extension = F::extension($entry);
+    $entryIsStyle =
+      $extension === 'css' || $extension === 'scss' || $extension === 'sass';
+
+    $file = $entryIsStyle
+      ? $this->manifestProperty($entry, 'file')
+      : $this->manifestProperty($entry, 'css')[0];
+
+    return css($this->assetProd($file), $options);
   }
 
   /**

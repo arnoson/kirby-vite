@@ -48,6 +48,10 @@ it('generates CSS for production', function () {
   $result = "<link href=\"/dist/assets/main.1234.css\" rel=\"stylesheet\">";
   expect($this->vite->css('main.css'))->toBe($result);
 
+  // Require the CSS for a JS file.
+  $result = "<link href=\"/dist/assets/main.1234.css\" rel=\"stylesheet\">";
+  expect($this->vite->css('main.js'))->toBe($result);
+
   $result =
     "<link data-test=\"test\" href=\"/dist/assets/main.1234.css\" media=\"print\" rel=\"stylesheet\">";
   $options = ['media' => 'print', 'data-test' => 'test'];

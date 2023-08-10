@@ -2,7 +2,8 @@
   "main.js": {
     "file": "assets/main.1234.js",
     "src": "index.js",
-    "isEntry": true
+    "isEntry": true,
+    "css": ["assets/main.1234.css"]
   },
   "main.css": {
     "file": "assets/main.1234.css",
