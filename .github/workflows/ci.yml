@@ -25,7 +25,4 @@ jobs:
         working-directory: packages/kirby-vite
 
       - name: Test
-        run: npm run test
-
-      - name: Test Format
-        run: npm run test:format
+        run: composer run test
