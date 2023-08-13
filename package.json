@@ -2,7 +2,7 @@
   "version": "4.0.0",
   "scripts": {
     "test": "composer run test",
-    "release": "bumpp --no-push -r",
+    "release": "bumpp -r",
     "test:format": "prettier . --check"
   },
   "devDependencies": {
