@@ -103,10 +103,14 @@ class Vite {
    *
    * @throws Exception
    */
-  protected function manifestProperty(string $entry, $key = 'file') {
+  protected function manifestProperty(
+    string $entry,
+    $key = 'file',
+    $try = false
+  ) {
     $manifestEntry = $this->manifest()[$entry] ?? null;
     if (!$manifestEntry) {
-      if (option('debug')) {
+      if (!$try && option('debug')) {
         throw new Exception("`$entry` is not a manifest entry.");
       }
       return;
@@ -114,7 +118,7 @@ class Vite {
 
     $value = $manifestEntry[$key] ?? null;
     if (!$value) {
-      if (option('debug')) {
+      if (!$try && option('debug')) {
         throw new Exception("`$key` not found in manifest entry `$entry`");
       }
       return;
@@ -150,8 +154,12 @@ class Vite {
   /**
    * Include the js file for the specified entry.
    */
-  public function js(string $entry, $options = []): ?string {
-    $file = $this->file($entry);
+  public function js(string $entry, $options = [], $try = false): ?string {
+    $file = $this->file($entry, $try);
+    if (!$file && $try) {
+      return null;
+    }
+
     $options = array_merge(['type' => 'module'], $options);
 
     $legacy = $this->config()['legacy'];
@@ -174,7 +182,7 @@ class Vite {
    * `vite()->css('main.js')`, in this case the CSS imported in the JS file will
    *  be used.
    */
-  public function css(string $entry, array $options = null): ?string {
+  public function css(string $entry, $options = [], $try = false): ?string {
     if ($this->isDev()) {
       return null;
     }
@@ -183,9 +191,16 @@ class Vite {
     $entryIsStyle =
       $extension === 'css' || $extension === 'scss' || $extension === 'sass';
 
-    $file = $entryIsStyle
-      ? $this->manifestProperty($entry, 'file')
-      : $this->manifestProperty($entry, 'css')[0];
+    $file = null;
+    if ($entryIsStyle) {
+      $file = $this->manifestProperty($entry, 'file', $try);
+    } else {
+      $css = $this->manifestProperty($entry, 'css', $try);
+      $file = $css ? $css[0] : null;
+    }
+    if (!$file) {
+      return null;
+    }
 
     return css($this->assetProd($file), $options);
   }
@@ -193,10 +208,13 @@ class Vite {
   /**
    * Return manifest file path for entry.
    */
-  public function file(string $entry): string {
-    return $this->isDev()
-      ? $this->assetDev($entry)
-      : $this->assetProd($this->manifestProperty($entry, 'file'));
+  public function file(string $entry, $try = false): ?string {
+    if ($this->isDev()) {
+      return $this->assetDev($entry);
+    }
+
+    $property = $this->manifestProperty($entry, 'file', $try);
+    return $property ? $this->assetProd($property) : null;
   }
 
   protected function legacyPolyfills($options = []): ?string {
@@ -223,7 +241,11 @@ class Vite {
     return js($entry, array_merge(['nomodule' => true], $options));
   }
 
-  protected function legacyJs(string $entry, $options = []): ?string {
+  protected function legacyJs(
+    string $entry,
+    $options = [],
+    $try = false
+  ): ?string {
     if ($this->isDev()) {
       return null;
     }
@@ -231,7 +253,10 @@ class Vite {
     $parts = explode('.', $entry);
     $parts[count($parts) - 2] .= '-legacy';
     $legacyEntry = join('.', $parts);
-    $file = $this->file($legacyEntry);
+    $file = $this->file($legacyEntry, $try);
+    if (!$file) {
+      return null;
+    }
 
     return js($file, array_merge(['nomodule' => true], $options));
   }

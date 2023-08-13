@@ -107,6 +107,16 @@ Sometimes you might want to access the (hashed) file path of your assets, e.g. t
  <link rel="preload" href="<?= vite()->file('my-font.woff2') ?>" as="font" type="font/woff2" crossorigin>
 ```
 
+## Trying
+
+If you try to load a non-existent manifest entry, this plugin will throw an error (if Kirby's `debug` option is enabled). This is intended behaviour, since you usually know which entries exist. But sometimes, especially in a multi-page setup, you may want to try to load an entry only if it exists. You can do this with the `try` flag:
+
+```php
+vite()->js('templates/' . $page->template() . '/index.js', try: true);
+vite()->css('templates/' . $page->template() . '/index.css', try: true);
+vite()->file('maybe.woff2', try: true);
+```
+
 ## Legacy build
 
 Since version `2.4.0` you can easily support legacy browsers that do not support native ESM.
