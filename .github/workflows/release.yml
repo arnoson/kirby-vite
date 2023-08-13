@@ -25,7 +25,9 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: |
+          cd packages/vite-plugin-kirby
+          npm run build
 
       - name: Publish to NPM
         run: |
