@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-kirby",
-  "version": "0.2.1",
+  "version": "4.0.0",
   "packageManager": "pnpm@7.17.0",
   "type": "module",
   "main": "dist/index.cjs",
