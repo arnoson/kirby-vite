@@ -163,15 +163,6 @@ which will render:
 
 `@vitejs/plugin-legacy` will inline the css in the legacy js entry. So users with a legacy browser will download the css twice. [See this issue](https://github.com/vitejs/vite/issues/2062).
 
-## Watch files
-
-vite-plugin-kirby automatically uses vite-plugin-live-reload to watch the following paths:
-
-- `site/(templates|snippets|controllers|models|layouts)/**/*.php`
-- `content/**/*`
-
-To disable file watching or define your own paths, [configure](https://github.com/arnoson/vite-plugin-kirby#watch-files) vite-plugin-kirby.
-
 ## Credits
 
 This plugin is highly inspired by [Diverently](https://github.com/Diverently)'s [Laravel Mix Helper for Kirby](https://github.com/Diverently/laravel-mix-kirby) and [André Felipe](https://github.com/andrefelipe)'s [vite-php-setup](https://github.com/andrefelipe/vite-php-setup). Many of the fine tunings I owe to [Johann Schopplich](https://github.com/johannschopplich) and his [Kirby + Vue 3 Starterkit](https://github.com/johannschopplich/kirby-vue3-starterkit).
