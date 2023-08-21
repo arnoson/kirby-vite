@@ -5,11 +5,11 @@ use Kirby\Filesystem\F;
 use \Exception;
 
 function getRelativePath($rootPath, $fullPath) {
-  $rootPath = rtrim($rootPath, '/');
-  $fullPath = rtrim($fullPath, '/');
+  $rootPath = realpath(rtrim($rootPath, '/'));
+  $fullPath = realpath(rtrim($fullPath, '/'));
 
   if (strpos($fullPath, $rootPath) === 0) {
-    $relativePath = ltrim(substr($fullPath, strlen($rootPath)), '/');
+    $relativePath = ltrim(substr($fullPath, strlen($rootPath)), DIRECTORY_SEPARATOR);
     return $relativePath;
   }
 
