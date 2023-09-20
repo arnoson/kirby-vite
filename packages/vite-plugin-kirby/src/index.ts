@@ -1,5 +1,5 @@
 import type { Plugin, ViteDevServer } from 'vite'
-import { relative, resolve } from 'node:path'
+import { relative, resolve, sep } from 'node:path'
 import { writeFile, unlink } from 'node:fs/promises'
 import { liveReload } from 'vite-plugin-live-reload'
 
@@ -55,7 +55,7 @@ export default (
       // Share some essential Vite config with Kirby.
       let { outDir, assetsDir } = build
       // PHP needs the `outDir` relative to the project's root (cwd).
-      outDir = relative(process.cwd(), resolve(root, outDir))
+      outDir = relative(process.cwd(), resolve(root, outDir)).replace(/\//g, sep)
       const file = `${kirbyConfigDir}/vite.config.php`
       const legacy = !!plugins.find((v) => v.name === 'vite:legacy-config')
       writeFile(file, phpConfigTemplate({ outDir, assetsDir, legacy }))
