@@ -1,6 +1,6 @@
 import type { Plugin, ViteDevServer } from 'vite'
 import { relative, resolve, sep } from 'node:path'
-import { writeFile, unlink, access } from 'node:fs/promises'
+import { writeFile, readFile, unlink, access } from 'node:fs/promises'
 import { liveReload } from 'vite-plugin-live-reload'
 
 export interface Config {
@@ -26,7 +26,10 @@ export interface Config {
   kirbyConfigDir?: string
 }
 
-const phpConfigTemplate = (config: Record<string, any>) => `<?php return [
+const phpConfigTemplate = (config: Record<string, any>) => `<?php
+// This is an auto-generated file. Please avoid making changes here.
+// Configure your settings in the "vite.config.js" file instead.
+return [
 ${Object.entries(config)
   .map(([key, value]) => {
     if (typeof value === 'string') value = `'${value}'`
@@ -58,11 +61,17 @@ export default (
       outDir = relative(process.cwd(), resolve(root, outDir)).replace(/\//g, sep)
       const file = `${kirbyConfigDir}/vite.config.php`
       const legacy = !!plugins.find((v) => v.name === 'vite:legacy-config')
+      const template = phpConfigTemplate({ outDir, assetsDir, legacy })
       // Check if the file already exists before writing it
       try {
         await access(file)
+        const currentFile = await readFile(file, 'utf-8')
+        // Check if the values are the same as in the current file
+        if (template !== currentFile) {
+          await writeFile(file, template)
+        }
       } catch (err) {
-        await writeFile(file, phpConfigTemplate({ outDir, assetsDir, legacy }))
+        await writeFile(file, template)
       }
     },
 
