@@ -57,21 +57,22 @@ export default (
     async configResolved({ build, plugins, root }) {
       // Share some essential Vite config with Kirby.
       let { outDir, assetsDir } = build
+
       // PHP needs the `outDir` relative to the project's root (cwd).
-      outDir = relative(process.cwd(), resolve(root, outDir)).replace(/\//g, sep)
+      outDir = relative(process.cwd(), resolve(root, outDir))
+      outDir = outDir.replace(/\//g, sep)
+
       const file = `${kirbyConfigDir}/vite.config.php`
       const legacy = !!plugins.find((v) => v.name === 'vite:legacy-config')
-      const template = phpConfigTemplate({ outDir, assetsDir, legacy })
-      // Check if the file already exists before writing it
+      const config = phpConfigTemplate({ outDir, assetsDir, legacy })
+
+      // Only write the config file if it does't exist or has older content.
       try {
         await access(file)
-        const currentFile = await readFile(file, 'utf-8')
-        // Check if the values are the same as in the current file
-        if (template !== currentFile) {
-          await writeFile(file, template)
-        }
+        const oldConfig = await readFile(file, 'utf-8')
+        if (config !== oldConfig) await writeFile(file, config)
       } catch (err) {
-        await writeFile(file, template)
+        await writeFile(file, config)
       }
     },
 
