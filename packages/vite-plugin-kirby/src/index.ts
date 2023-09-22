@@ -1,6 +1,6 @@
 import type { Plugin, ViteDevServer } from 'vite'
-import { relative, resolve } from 'node:path'
-import { writeFile, unlink } from 'node:fs/promises'
+import { relative, resolve, sep } from 'node:path'
+import { writeFile, readFile, unlink, access } from 'node:fs/promises'
 import { liveReload } from 'vite-plugin-live-reload'
 
 export interface Config {
@@ -26,7 +26,10 @@ export interface Config {
   kirbyConfigDir?: string
 }
 
-const phpConfigTemplate = (config: Record<string, any>) => `<?php return [
+const phpConfigTemplate = (config: Record<string, any>) => `<?php
+// This is an auto-generated file. Please avoid making changes here.
+// Configure your settings in the "vite.config.js" file instead.
+return [
 ${Object.entries(config)
   .map(([key, value]) => {
     if (typeof value === 'string') value = `'${value}'`
@@ -51,14 +54,25 @@ export default (
       return { build: { manifest: true } }
     },
 
-    configResolved({ build, plugins, root }) {
+    async configResolved({ build, plugins, root }) {
       // Share some essential Vite config with Kirby.
       let { outDir, assetsDir } = build
       // PHP needs the `outDir` relative to the project's root (cwd).
-      outDir = relative(process.cwd(), resolve(root, outDir))
+      outDir = relative(process.cwd(), resolve(root, outDir)).replace(/\//g, sep)
       const file = `${kirbyConfigDir}/vite.config.php`
       const legacy = !!plugins.find((v) => v.name === 'vite:legacy-config')
-      writeFile(file, phpConfigTemplate({ outDir, assetsDir, legacy }))
+      const template = phpConfigTemplate({ outDir, assetsDir, legacy })
+      // Check if the file already exists before writing it
+      try {
+        await access(file)
+        const currentFile = await readFile(file, 'utf-8')
+        // Check if the values are the same as in the current file
+        if (template !== currentFile) {
+          await writeFile(file, template)
+        }
+      } catch (err) {
+        await writeFile(file, template)
+      }
     },
 
     configureServer(server: ViteDevServer) {
