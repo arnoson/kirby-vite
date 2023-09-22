@@ -1,7 +1,7 @@
 {
   "name": "arnoson/kirby-vite",
   "description": "Vite helper for Kirby CMS",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "type": "kirby-plugin",
   "license": "MIT",
   "authors": [
