@@ -40,5 +40,8 @@
   "homepage": "https://github.com/arnoson/vite-plugin-kirby#readme",
   "dependencies": {
     "vite-plugin-live-reload": "^3.0.2"
+  },
+  "peerDependencies": {
+    "vite": "^4.2.1"
   }
 }

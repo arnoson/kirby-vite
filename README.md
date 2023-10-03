@@ -42,7 +42,7 @@ composer require arnoson/kirby-vite
 ```
 
 ```
-npm install vite-plugin-kirby
+npm install vite vite-plugin-kirby
 ```
 
 ### Development VS Production modes
