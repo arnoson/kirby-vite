@@ -1,7 +1,8 @@
 /.* export-ignore
 /package.json export-ignore
-/packages/vite-plugin-kirby export-ignore
+/example export-ignore
 
+/packages/vite-plugin-kirby export-ignore
 /packages/kirby-vite/.* export-ignore
 /packages/kirby-vite/test export-ignore
 /packages/kirby-vite/composer.json export-ignore

@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "vite",
+    "server": "php -S localhost:8888 ./kirby/router.php",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "vite": "^4.2.1"
+  }
+}
