@@ -38,7 +38,7 @@ ${Object.entries(config)
   .join(',\n')}
 ];`
 
-let exitHandlersBound = false
+let exitHandlersRegistered = false
 
 export default (
   {
@@ -48,6 +48,7 @@ export default (
   } = {} as Config
 ): Plugin => {
   const devPath = resolve(devDir, '.dev')
+  const removeDevFile = () => unlink(devPath).catch((_e: Error) => {})
 
   return {
     name: 'vite-plugin-kirby',
@@ -92,17 +93,12 @@ export default (
         writeFile(devPath, `VITE_SERVER=${config.server.origin}`)
       })
 
-      if (!exitHandlersBound) {
-        const clean = () => {
-          unlink(devPath).catch((_e: Error) => {})
-        }
-
-        process.on('exit', clean)
+      if (!exitHandlersRegistered) {
+        process.on('exit', removeDevFile)
         process.on('SIGINT', process.exit)
         process.on('SIGTERM', process.exit)
         process.on('SIGHUP', process.exit)
-
-        exitHandlersBound = true
+        exitHandlersRegistered = true
       }
 
       if (watch) {
@@ -117,7 +113,7 @@ export default (
     },
 
     buildStart() {
-      unlink(devPath).catch((_e: Error) => {})
+      removeDevFile()
     },
   }
 }
