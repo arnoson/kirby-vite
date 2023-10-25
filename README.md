@@ -163,6 +163,17 @@ which will render:
 
 `@vitejs/plugin-legacy` will inline the css in the legacy js entry. So users with a legacy browser will download the css twice. [See this issue](https://github.com/vitejs/vite/issues/2062).
 
+## Contribution
+
+PRs are welcome! If you are contributing it'd be great if you
+
+- use conventional commits, so the release message can be auto-generated (and you are included in it!)
+- format your code (if you are using vscode, this should happen automatically on save, otherwise use `npm run format`)
+
+For quick manual testing, checkout the `/example` which uses the local vite and kirby plugin. When adding new features consider adding/improving tests in `/packages/kirby-vite/test` (right now we're only testing the kirby plugin).
+
+Thanks :~)
+
 ## Credits
 
 This plugin is highly inspired by [Diverently](https://github.com/Diverently)'s [Laravel Mix Helper for Kirby](https://github.com/Diverently/laravel-mix-kirby) and [André Felipe](https://github.com/andrefelipe)'s [vite-php-setup](https://github.com/andrefelipe/vite-php-setup). Many of the fine tunings I owe to [Johann Schopplich](https://github.com/johannschopplich) and his [Kirby + Vue 3 Starterkit](https://github.com/johannschopplich/kirby-vue3-starterkit).
