@@ -101,7 +101,7 @@ class Vite {
    *
    * @throws Exception
    */
-  protected function manifestProperty(string $entry, string $key = 'file', bool $try = false): ?string {
+  protected function manifestProperty(string $entry, string $key = 'file', bool $try = false): null|string|array {
     $manifestEntry = $this->manifest()[$entry] ?? null;
     if (!$manifestEntry) {
       if (!$try && option('debug')) {
