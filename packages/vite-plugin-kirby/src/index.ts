@@ -116,6 +116,8 @@ export default (
       }
     },
 
-    buildStart() {},
+    buildStart() {
+      unlink(devPath).catch((_e: Error) => {})
+    },
   }
 }
