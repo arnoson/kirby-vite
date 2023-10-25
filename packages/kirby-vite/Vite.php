@@ -8,12 +8,11 @@ function getRelativePath(string $rootPath, string $fullPath): ?string {
   $rootPath = realpath(rtrim($rootPath, '/'));
   $fullPath = realpath(rtrim($fullPath, '/'));
 
-  if (strpos($fullPath, $rootPath) === 0) {
-    $relativePath = ltrim(substr($fullPath, strlen($rootPath)), DIRECTORY_SEPARATOR);
-    return $relativePath;
+  if (str_starts_with($fullPath, $rootPath)) {
+    return ltrim(substr($fullPath, strlen($rootPath)), DIRECTORY_SEPARATOR);
   }
 
-  return false;
+  return null;
 }
 
 class Vite {
