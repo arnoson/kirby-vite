@@ -1,4 +1,4 @@
-packages/kirby-vite/kirby/
-packages/kirby-vite/vendor/
-packages/vite-plugin-kirby/dist/
+**/dist
+**/kirby
+**/vendor
 composer.lock

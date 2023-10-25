@@ -3,7 +3,8 @@
   "scripts": {
     "test": "composer run test",
     "release": "bumpp -r",
-    "test:format": "prettier . --check"
+    "test:format": "prettier --check .",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.19.6",
