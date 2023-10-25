@@ -38,6 +38,8 @@ ${Object.entries(config)
   .join(',\n')}
 ];`
 
+let exitHandlersBound = false
+
 export default (
   {
     watch = true,
@@ -90,6 +92,19 @@ export default (
         writeFile(devPath, `VITE_SERVER=${config.server.origin}`)
       })
 
+      if (!exitHandlersBound) {
+        const clean = () => {
+          unlink(devPath).catch((_e: Error) => {})
+        }
+
+        process.on('exit', clean)
+        process.on('SIGINT', process.exit)
+        process.on('SIGTERM', process.exit)
+        process.on('SIGHUP', process.exit)
+
+        exitHandlersBound = true
+      }
+
       if (watch) {
         const defaultPaths = [
           '../site/(templates|snippets|controllers|models|layouts)/**/*.php',
@@ -101,8 +116,6 @@ export default (
       }
     },
 
-    buildStart() {
-      unlink(devPath).catch((_e: Error) => {})
-    },
+    buildStart() {},
   }
 }
