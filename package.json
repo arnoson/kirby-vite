@@ -2,7 +2,7 @@
   "version": "4.0.9",
   "scripts": {
     "test": "composer run test",
-    "release": "bumpp -r",
+    "release": "bumpp",
     "test:format": "prettier --check .",
     "format": "prettier --write ."
   },
