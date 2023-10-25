@@ -23,8 +23,7 @@
   },
   "require": {
     "php": ">=8.0.0 <8.3.0",
-    "getkirby/cms": "^3.9",
-    "arnoson/kirby-vite": "^3.0"
+    "getkirby/cms": "^3.9"
   },
   "config": {
     "allow-plugins": {
