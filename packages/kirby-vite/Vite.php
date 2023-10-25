@@ -182,8 +182,7 @@ class Vite {
     }
 
     $extension = F::extension($entry);
-    $entryIsStyle =
-      $extension === 'css' || $extension === 'scss' || $extension === 'sass';
+    $entryIsStyle = in_array($extension, ['css', 'scss', 'sass', 'less', 'styl', 'stylus'], true);
 
     $file = null;
     if ($entryIsStyle) {
