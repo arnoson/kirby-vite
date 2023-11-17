@@ -5,6 +5,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "vite": "^4.2.1"
+    "vite": "^5.0.0"
   }
 }
