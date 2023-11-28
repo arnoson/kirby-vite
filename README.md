@@ -161,7 +161,7 @@ which will render:
 
 ## Panel CSS/JS
 
-Since version `5.0.2` and **Kirby 4** you can bundle your panel assets alongside your other assets with vite. If you need this feature in Kirby 3, consider [kirby-laravel-vite](https://github.com/lukaskleinschmidt/kirby-laravel-vite/#custom-panel-scripts-and-styles).
+Since version `5.1.0` and **Kirby 4** you can bundle your panel assets alongside your other assets with vite. If you need this feature in Kirby 3, consider [kirby-laravel-vite](https://github.com/lukaskleinschmidt/kirby-laravel-vite/#custom-panel-scripts-and-styles).
 
 Add your panel assets to vite:
 
