@@ -62,7 +62,11 @@ All configuration is done in the `vite.config.js`:
 // vite.config.js
 import kirby from 'vite-plugin-kirby'
 
-export default {
+export default ({ mode }) => ({
+  // Needed so that the generated assets have URLs starting with `/dist/` and
+  // not `/` in production.
+  base: mode === 'development' ? '/' : '/dist/',
+
   build: {
     // Where your manifest an bundled assets will be placed. This example
     // assumes you use a public folder structure.
@@ -94,7 +98,7 @@ export default {
     // placed. This has to match Kirby's config folder!
     kirbyConfigDir: 'site/config' // default
   })],
-}
+})
 ```
 
 `vite-plugin-kirby` shares part of this config with Kirby, by dynamically creating a `site/config/vite.config.php` file.
