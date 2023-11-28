@@ -3,6 +3,7 @@
 namespace arnoson\KirbyVite;
 use Kirby\Filesystem\F;
 use \Exception;
+use Kirby\Cms\App;
 
 function getRelativePath(string $rootPath, string $fullPath): ?string {
   $rootPath = realpath(rtrim($rootPath, '/'));
@@ -54,6 +55,15 @@ class Vite {
   protected function isDev(): bool {
     $devDir = kirby()->root('base') ?? kirby()->root('index');
     return F::exists("$devDir/.dev");
+  }
+
+  protected function isStyle(string $entry): bool {
+    $extension = F::extension($entry);
+    return in_array(
+      $extension,
+      ['css', 'scss', 'sass', 'less', 'styl', 'stylus'],
+      true
+    );
   }
 
   /**
@@ -150,6 +160,50 @@ class Vite {
       : null;
   }
 
+  public function panelJs(?string $entry = null): string|array|null {
+    if (App::version() < 4) {
+      if (option('debug')) {
+        throw new Exception('`vite()->panelJs()` requires Kirby 4');
+      }
+      return null;
+    }
+
+    if (!$entry) {
+      return $this->isDev() ? '@vite/client' : null;
+    }
+    $asset = $this->file($entry);
+    $asset = ltrim($asset, '/');
+    return $this->isDev() ? ['@vite/client', $asset] : $asset;
+  }
+
+  public function panelCss($entry) {
+    if (App::version() < 4) {
+      if (option('debug')) {
+        throw new Exception('`vite()->panelCss()` requires Kirby 4');
+      }
+      return null;
+    }
+
+    $entryIsStyle = $this->isStyle($entry);
+    if ($this->isDev()) {
+      return $entryIsStyle ? $this->assetDev($entry) : null;
+    }
+
+    $file = null;
+    if ($entryIsStyle) {
+      $file = $this->manifestProperty($entry, 'file');
+    } else {
+      $css = $this->manifestProperty($entry, 'css');
+      $file = $css ? $css[0] : null;
+    }
+    if (!$file) {
+      return null;
+    }
+
+    $asset = $this->assetProd($file);
+    return ltrim($asset, '/');
+  }
+
   /**
    * Include the js file for the specified entry.
    */
@@ -190,20 +244,10 @@ class Vite {
     array $options = [],
     bool $try = false
   ): ?string {
-    if ($this->isDev()) {
-      return null;
-    }
-
-    $extension = F::extension($entry);
-    $entryIsStyle = in_array(
-      $extension,
-      ['css', 'scss', 'sass', 'less', 'styl', 'stylus'],
-      true
-    );
-
     // If we are in dev mode and this is not a style, e.g.:
     // `vite()->css('index.js')`, the corresponding js entry will inject the
     // css and we don't have to do anything.
+    $entryIsStyle = $this->isStyle($entry);
     if ($this->isDev()) {
       return $entryIsStyle ? css($this->assetDev($entry)) : null;
     }

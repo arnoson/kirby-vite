@@ -159,6 +159,44 @@ which will render:
 ></script>
 ```
 
+## Panel CSS/JS
+
+Since version `5.0.2` and **Kirby 4** you can bundle your panel assets alongside your other assets with vite. If you need this feature in Kirby 3, consider [kirby-laravel-vite](https://github.com/lukaskleinschmidt/kirby-laravel-vite/#custom-panel-scripts-and-styles).
+
+Add your panel assets to vite:
+
+```js
+// vite.config.js
+
+export {
+  // ...
+  build: {
+    rollupOptions: { input: ['src/your-other-assets.js', 'src/panel.js'] },
+  },
+}
+```
+
+And configure Kirby. Make sure to use the [ready](https://getkirby.com/docs/reference/system/options/ready) callback, otherwise you won't be able to call the `vite()` helpers.
+
+```php
+<?php return [
+  'ready' => fn() => [
+    'panel' => [
+      // If you have a `panel.js` file, that imports the `panel.css` file:
+      'css' => vite()->panelCss('panel.js'),
+      'js' => vite()->panelJs('panel.js'),
+
+      // If you only have a `panel.css` without a js file you must still use
+      // `vite()->panelJs()`, as this injects the vite client in development.
+      'css' => vite()->panelCss('panel.css'),
+      'js' => vite()->panelJs(),
+    ],
+  ],
+];
+```
+
+Checkout the [example](https://github.com/arnoson/kirby-vite/tree/main/example) which includes a panel js/css setup.
+
 ### Known issue
 
 `@vitejs/plugin-legacy` will inline the css in the legacy js entry. So users with a legacy browser will download the css twice. [See this issue](https://github.com/vitejs/vite/issues/2062).

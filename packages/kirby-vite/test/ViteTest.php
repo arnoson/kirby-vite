@@ -47,9 +47,12 @@ it('it omits errors for missing JS entries when trying', function () {
   $this->vite->js('does-not-exists.js', try: true);
 })->throwsNoExceptions();
 
-it('omits CSS for development', function () {
+it('omits CSS imported by JS in development', function () {
   setMode('development');
-  expect($this->vite->css('main.css'))->toBe(null);
+  expect($this->vite->css('main.js'))->toBe(null);
+  expect($this->vite->css('main.css'))->toBe(
+    '<link href="http://localhost:5173/main.css" rel="stylesheet">'
+  );
 });
 
 it('generates CSS for production', function () {
@@ -101,3 +104,24 @@ it('omits errors for missing file when trying', function () {
   setMode('production');
   $this->vite->file('does-not-exist.woff2', try: true);
 })->throwsNoExceptions();
+
+it('generates panel assets in development', function () {
+  setMode('development');
+  expect($this->vite->panelJs())->toBe('@vite/client');
+  expect($this->vite->panelJs('main.js'))->toBe([
+    '@vite/client',
+    'http://localhost:5173/main.js',
+  ]);
+  expect($this->vite->panelCss('main.js'))->toBe(null);
+  expect($this->vite->panelCss('main.css'))->toBe(
+    'http://localhost:5173/main.css'
+  );
+});
+
+it('generates panel assets in production', function () {
+  setMode('production');
+  expect($this->vite->panelJs())->toBe(null);
+  expect($this->vite->panelJs('main.js'))->toBe('dist/assets/main.1234.js');
+  expect($this->vite->panelCss('main.js'))->toBe('dist/assets/main.1234.css');
+  expect($this->vite->panelCss('main.css'))->toBe('dist/assets/main.1234.css');
+});
