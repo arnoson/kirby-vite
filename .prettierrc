@@ -1,6 +1,13 @@
 {
   "semi": false,
   "singleQuote": true,
-  "braceStyle": "1tbs",
-  "tabWidth": 2
+  "tabWidth": 2,
+  "overrides": [
+    {
+      "files": ".php",
+      "options": {
+        "braceStyle": "1tbs"
+      }
+    }
+  ]
 }

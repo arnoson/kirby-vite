@@ -45,7 +45,7 @@ export default (
     watch = true,
     devDir = process.cwd(),
     kirbyConfigDir = 'site/config',
-  } = {} as Config
+  } = {} as Config,
 ): Plugin => {
   const devPath = resolve(devDir, '.dev')
   const removeDevFile = () => unlink(devPath).catch((_e: Error) => {})
