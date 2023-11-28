@@ -201,6 +201,13 @@ class Vite {
       true
     );
 
+    // If we are in dev mode and this is not a style, e.g.:
+    // `vite()->css('index.js')`, the corresponding js entry will inject the
+    // css and we don't have to do anything.
+    if ($this->isDev()) {
+      return $entryIsStyle ? css($this->assetDev($entry)) : null;
+    }
+
     $file = null;
     if ($entryIsStyle) {
       $file = $this->manifestProperty($entry, 'file', $try);
