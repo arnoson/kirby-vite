@@ -7,7 +7,7 @@
     "test": "vendor/bin/pest"
   },
   "require-dev": {
-    "getkirby/cms": "^3.9",
+    "getkirby/cms": "^4.0",
     "pestphp/pest": "^2.4"
   },
   "config": {

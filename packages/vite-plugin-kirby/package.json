@@ -29,11 +29,11 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.15.11",
+    "@types/node": "^20.0.0",
     "@vitejs/plugin-legacy": "^5.0.0",
     "bumpp": "^9.1.0",
     "picocolors": "^1.0.0",
-    "tsup": "^7.0.0",
+    "tsup": "^8.0.0",
     "typescript": "^5.0.3",
     "vite": "^5.0.0"
   },
