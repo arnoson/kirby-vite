@@ -57,8 +57,9 @@ All configuration is done in the `vite.config.js`:
 import kirby from 'vite-plugin-kirby'
 
 export default ({ mode }) => ({
-  // Needed so that the generated assets have URLs starting with `/dist/` and
-  // not `/` in production.
+  // During development the assets are served directly from vite's dev server
+  // e.g. `localhost:5173/index.js`, but for production they are placed inside
+  // the `build.outDir`, `/dist/` in this case.
   base: mode === 'development' ? '/' : '/dist/',
 
   build: {
