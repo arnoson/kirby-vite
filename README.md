@@ -3,9 +3,7 @@
  alt="Kirby Vite Plugin" width="400" height="400">
 </p>
 
-<h1 align="center">Kirby Vite</h1>
-
-Use [Kirby CMS](https://getkirby.com/) together with [Vite](https://github.com/vitejs/vite).
+<h2 align="center">Use Kirby CMS together with Vite</h2>
 
 ## Getting started
 
