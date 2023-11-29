@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="https://github.com/arnoson/kirby-vite/assets/15122993/a2490f63-315a-4f8f-9fab-c0240231d679"
- alt="Kirby Vite Plugin" width="400" height="400">
+  <img src="./.github/logo.svg"
+ alt="Kirby Vite Plugin" width="350" height="350">
 </p>
 
 <h2 align="center">Use Kirby CMS together with Vite</h2>
