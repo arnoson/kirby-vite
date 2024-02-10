@@ -18,7 +18,9 @@ function getRelativePath(string $rootPath, string $fullPath): ?string {
 
 class Vite {
   protected static Vite $instance;
-  protected bool $isFirstScript = true;
+  protected bool $hasClient = false;
+  protected bool $hasLegacyPolyfills = false;
+  protected ?bool $isDev = null;
   protected ?string $outDir = null;
   protected ?array $manifest = null;
   protected ?array $config = null;
@@ -49,12 +51,15 @@ class Vite {
       : $this->config()['outDir'];
   }
 
+  protected function baseDir(): string {
+    return kirby()->root('base') ?? kirby()->root('index');
+  }
+
   /**
    * Check if we're in development mode.
    */
   protected function isDev(): bool {
-    $devDir = kirby()->root('base') ?? kirby()->root('index');
-    return F::exists("$devDir/.dev");
+    return $this->isDev ??= F::exists($this->baseDir() . '/.dev');;
   }
 
   protected function isStyle(string $entry): bool {
@@ -151,13 +156,8 @@ class Vite {
     return "/$outDir/$file";
   }
 
-  /**
-   * Include vite's client in development mode.
-   */
   protected function client(): ?string {
-    return $this->isDev()
-      ? js($this->assetDev('@vite/client'), ['type' => 'module'])
-      : null;
+    return js($this->assetDev('@vite/client'), ['type' => 'module']);
   }
 
   public function panelJs(?string $entry = null): string|array|null {
@@ -218,18 +218,28 @@ class Vite {
     }
 
     $options = array_merge(['type' => 'module'], $options);
+    $scripts = [];
 
-    $legacy = $this->config()['legacy'];
-    // There might be multiple `vite()->js()` calls but some scripts
-    // (vite client, legacy polyfills) should be only included once per page.
-    $scripts = [
-      $this->isFirstScript ? $this->client() : null,
-      $this->isFirstScript && $legacy ? $this->legacyPolyfills() : null,
-      $legacy ? $this->legacyJs($entry) : null,
-      js($file, $options),
-    ];
+    dump($this->isDev() ? 'dev' : 'prod');
 
-    $this->isFirstScript = false;
+    // Client is only needed during development.
+    if ($this->isDev() && !$this->hasClient) {
+      array_push($scripts, $this->client());
+      $this->hasClient = true;
+    }
+    
+    // Legacy code is only needed in production.
+    $legacy = !$this->isDev() && $this->config()['legacy'];
+    if ($legacy && !$this->hasLegacyPolyfills) {
+      array_push($scripts, $this->legacyPolyfills());
+      $this->hasLegacyPolyfills = true;
+    }
+    if ($legacy) {
+      array_push($scripts, $this->legacyJs($entry));
+    }
+
+    // Finally, add the entry itself.
+    array_push($scripts, js($file, $options));
     return implode("\n", array_filter($scripts));
   }
 
@@ -244,26 +254,37 @@ class Vite {
     array $options = [],
     bool $try = false
   ): ?string {
-    // If we are in dev mode and this is not a style, e.g.:
-    // `vite()->css('index.js')`, the corresponding js entry will inject the
-    // css and we don't have to do anything.
+    $scripts = [];
+
+    // Client is only needed during development.
+    if ($this->isDev() && !$this->hasClient) {
+      array_push($scripts, $this->client());
+      $this->hasClient = true;
+    }
+
     $entryIsStyle = $this->isStyle($entry);
-    if ($this->isDev()) {
-      return $entryIsStyle ? css($this->assetDev($entry)) : null;
+    // During development, we only have to include the style if it is
+    // 'standalone', meaning a css (or sass, ...) file. The css for an js entry
+    // like `vite()->css('entry.js')` will be injected automatically.
+    if ($this->isDev() && $entryIsStyle) {
+      array_push($scripts, css($this->assetDev($entry), $options));
     }
 
-    $file = null;
-    if ($entryIsStyle) {
+    // If the entry is a css file we can simply add it...
+    if (!$this->isDev() && $entryIsStyle) {
       $file = $this->manifestProperty($entry, 'file', $try);
-    } else {
-      $css = $this->manifestProperty($entry, 'css', $try);
-      $file = $css ? $css[0] : null;
+      if ($file) array_push($scripts, css($this->assetProd($file), $options));
     }
-    if (!$file) {
-      return null;
+    // ...but if it is a js file we have to look up the manifest and add all
+    // css files associated with the entry. 
+    if (!$this->isDev() && !$entryIsStyle) {
+      $cssList = $this->manifestProperty($entry, 'css', $try) ?? [];
+      foreach ($cssList as $css) {
+        array_push($scripts, css($this->assetProd($css), $options));
+      }
     }
 
-    return css($this->assetProd($file), $options);
+    return count($scripts) ? implode("\n", $scripts) : null;
   }
 
   /**
@@ -279,10 +300,6 @@ class Vite {
   }
 
   protected function legacyPolyfills(array $options = []): ?string {
-    if ($this->isDev()) {
-      return null;
-    }
-
     $entry = null;
     foreach (array_keys($this->manifest()) as $key) {
       // The legacy entry is relative from vite's root folder (e.g.:
@@ -307,10 +324,6 @@ class Vite {
     array $options = [],
     bool $try = false
   ): ?string {
-    if ($this->isDev()) {
-      return null;
-    }
-
     $parts = explode('.', $entry);
     $parts[count($parts) - 2] .= '-legacy';
     $legacyEntry = join('.', $parts);
@@ -318,7 +331,6 @@ class Vite {
     if (!$file) {
       return null;
     }
-
     return js($file, array_merge(['nomodule' => true], $options));
   }
 }

@@ -49,6 +49,9 @@ it('it omits errors for missing JS entries when trying', function () {
 
 it('omits CSS imported by JS in development', function () {
   setMode('development');
+  // Call `vite()->js()` so the client is already included when we check for the
+  // css.
+  $this->vite->js('main.js');
   expect($this->vite->css('main.js'))->toBe(null);
   expect($this->vite->css('main.css'))->toBe(
     '<link href="http://localhost:5173/main.css" rel="stylesheet">'
