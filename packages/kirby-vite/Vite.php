@@ -5,17 +5,6 @@ use Kirby\Filesystem\F;
 use \Exception;
 use Kirby\Cms\App;
 
-function getRelativePath(string $rootPath, string $fullPath): ?string {
-  $rootPath = realpath(rtrim($rootPath, '/'));
-  $fullPath = realpath(rtrim($fullPath, '/'));
-
-  if (str_starts_with($fullPath, $rootPath)) {
-    return ltrim(substr($fullPath, strlen($rootPath)), DIRECTORY_SEPARATOR);
-  }
-
-  return null;
-}
-
 class Vite {
   protected static Vite $instance;
   protected bool $hasClient = false;
@@ -37,6 +26,17 @@ class Vite {
       '/vite.config.php';
   }
 
+  protected function getRelativePath(string $rootPath, string $fullPath): ?string {
+    $rootPath = realpath(rtrim($rootPath, '/'));
+    $fullPath = realpath(rtrim($fullPath, '/'));
+  
+    if (str_starts_with($fullPath, $rootPath)) {
+      return ltrim(substr($fullPath, strlen($rootPath)), DIRECTORY_SEPARATOR);
+    }
+  
+    return null;
+  }  
+
   /**
    * Get Vite's `outDir`, but relative to Kirby's index root. This is important
    * for public folder setups, where Kirby's index is not the project root. In
@@ -44,7 +44,7 @@ class Vite {
    */
   protected function outDir(): string {
     return $this->outDir ??= kirby()->root('base')
-      ? getRelativePath(
+      ? $this->getRelativePath(
         kirby()->root('index'),
         kirby()->root('base') . '/' . $this->config()['outDir']
       )
