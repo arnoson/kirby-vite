@@ -220,8 +220,6 @@ class Vite {
     $options = array_merge(['type' => 'module'], $options);
     $scripts = [];
 
-    dump($this->isDev() ? 'dev' : 'prod');
-
     // Client is only needed during development.
     if ($this->isDev() && !$this->hasClient) {
       array_push($scripts, $this->client());
