@@ -114,21 +114,25 @@ it('omits errors for missing file when trying', function () {
 
 it('generates panel assets in development', function () {
   setMode('development');
-  expect($this->vite->panelJs())->toBe('@vite/client');
+  expect($this->vite->panelJs())->toBe(['@vite/client']);
   expect($this->vite->panelJs('main.js'))->toBe([
     '@vite/client',
     'http://localhost:5173/main.js',
   ]);
   expect($this->vite->panelCss('main.js'))->toBe(null);
-  expect($this->vite->panelCss('main.css'))->toBe(
+  expect($this->vite->panelCss('main.css'))->toBe([
     'http://localhost:5173/main.css'
-  );
+  ]);
 });
 
 it('generates panel assets in production', function () {
   setMode('production');
   expect($this->vite->panelJs())->toBe(null);
-  expect($this->vite->panelJs('main.js'))->toBe('dist/assets/main.1234.js');
-  expect($this->vite->panelCss('main.js'))->toBe('dist/assets/main.1234.css');
-  expect($this->vite->panelCss('main.css'))->toBe('dist/assets/main.1234.css');
+  expect($this->vite->panelJs('main.js'))->toBe(['dist/assets/main.1234.js']);
+  expect($this->vite->panelCss('main.js'))->toBe([
+    'dist/assets/main.1234.css',
+    'dist/assets/chunk-1234.css',
+    'dist/assets/chunk-5678.css',
+  ]);
+  expect($this->vite->panelCss('main.css'))->toBe(['dist/assets/main.1234.css']);
 });

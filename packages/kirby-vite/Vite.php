@@ -4,6 +4,7 @@ namespace arnoson\KirbyVite;
 use Kirby\Filesystem\F;
 use \Exception;
 use Kirby\Cms\App;
+use Kirby\Toolkit\A;
 
 class Vite {
   protected static Vite $instance;
@@ -100,7 +101,7 @@ class Vite {
 
     $index = kirby()->root('index');
     $outDir = $this->outDir();
-    $manifest = $this->config()['manifest'];
+    $manifest = $this->config()['manifest'] ?? '.vite/manifest.json';
     $manifestPath = "$index/$outDir/$manifest";
 
     if (!F::exists($manifestPath)) {
@@ -161,7 +162,7 @@ class Vite {
     return js($this->assetDev('@vite/client'), ['type' => 'module']);
   }
 
-  public function panelJs(?string $entry = null): string|array|null {
+  public function panelJs(string|array $entries = []): array|null {
     if (App::version() < 4) {
       if (option('debug')) {
         throw new Exception('`vite()->panelJs()` requires Kirby 4');
@@ -169,15 +170,21 @@ class Vite {
       return null;
     }
 
-    if (!$entry) {
-      return $this->isDev() ? '@vite/client' : null;
+    $files = [];
+
+    if ($this->isDev()) {
+      array_push($files, '@vite/client');
     }
-    $asset = $this->file($entry);
-    $asset = ltrim($asset, '/');
-    return $this->isDev() ? ['@vite/client', $asset] : $asset;
+
+    foreach (A::wrap($entries) as $entry) {
+      $file = ltrim($this->file($entry), '/');
+      array_push($files, $file);
+    }
+
+    return count($files) ? $files : null;
   }
 
-  public function panelCss($entry) {
+  public function panelCss(string|array $entries = []): array|null {
     if (App::version() < 4) {
       if (option('debug')) {
         throw new Exception('`vite()->panelCss()` requires Kirby 4');
@@ -185,24 +192,30 @@ class Vite {
       return null;
     }
 
-    $entryIsStyle = $this->isStyle($entry);
-    if ($this->isDev()) {
-      return $entryIsStyle ? $this->assetDev($entry) : null;
+    $files = [];
+    
+    foreach (A::wrap($entries) as $entry) {
+      $isStyle = $this->isStyle($entry);
+      if ($isStyle) {
+        $file = ltrim($this->file($entry), '/');
+        array_push($files, $file);
+        continue;
+      }
+      // The css for an js entry will be injected automatically in development,
+      // so only have to handle production.
+      if (!$isStyle && !$this->isDev()) {
+        $cssList = $this->manifestProperty($entry, 'css', true) ?? [];
+        foreach ($cssList as $css) {
+          $file = ltrim($this->assetProd($css), '/');
+          array_push($files, $file);
+        }
+        foreach ($this->collectImportCss($entry) as $css) {
+          array_push($files, ltrim($css, '/'));
+        }
+      }
     }
 
-    $file = null;
-    if ($entryIsStyle) {
-      $file = $this->manifestProperty($entry, 'file');
-    } else {
-      $css = $this->manifestProperty($entry, 'css');
-      $file = $css ? $css[0] : null;
-    }
-    if (!$file) {
-      return null;
-    }
-
-    $asset = $this->assetProd($file);
-    return ltrim($asset, '/');
+    return count($files) ? $files : null;
   }
 
   /**
@@ -253,6 +266,7 @@ class Vite {
     array $options = [],
     bool $try = false
   ): ?string {
+    $isStyle = $this->isStyle($entry);
     $tags = [];
 
     // Client is only needed during development.
@@ -261,27 +275,23 @@ class Vite {
       $this->hasClient = true;
     }
 
-    $entryIsStyle = $this->isStyle($entry);
-    // During development, we only have to include the style if it is
-    // 'standalone', meaning a css (or sass, ...) file. The css for an js entry
-    // like `vite()->css('entry.js')` will be injected automatically.
-    if ($this->isDev() && $entryIsStyle) {
-      array_push($tags, css($this->assetDev($entry), $options));
+    if ($isStyle) {
+      $file = $this->file($entry, $try);
+      if ($file) {
+        array_push($tags, css($file, $options));
+      }
     }
 
-    // If the entry is a css file we can simply add it...
-    if (!$this->isDev() && $entryIsStyle) {
-      $file = $this->manifestProperty($entry, 'file', $try);
-      if ($file) array_push($tags, css($this->assetProd($file), $options));
-    }
-    // ...but if it is a js file we have to look up the manifest and add all
-    // css files associated with the entry and it's imports. 
-    if (!$this->isDev() && !$entryIsStyle) {
+    // The css for an js entry will be injected automatically in development,
+    // so only have to handle production.
+    if (!$isStyle && !$this->isDev()) {
       $cssList = $this->manifestProperty($entry, 'css', $try) ?? [];
       foreach ($cssList as $css) {
         array_push($tags, css($this->assetProd($css), $options));
       }
-      array_push($tags, ...$this->collectImportCss($entry, $options));
+      foreach ($this->collectImportCss($entry, $options) as $css) {
+        array_push($tags, css($css, $options));
+      }
     }
 
     return count($tags) ? implode("\n", $tags) : null;
@@ -290,15 +300,15 @@ class Vite {
   /**
    * Recursively collect all the css of the manifest item and it's imports.
    */
-  protected function collectImportCss(string $key, array $options = []): array {
+  protected function collectImportCss(string $key): array {
     $imports = $this->manifestProperty($key, 'imports', true) ?? [];
     $tags = [];
     foreach ($imports as $import) {
       $cssList = $this->manifestProperty($import, 'css', true) ?? [];
       foreach ($cssList as $css) {
-        array_push($tags, css($this->assetProd($css), $options));
+        array_push($tags, $this->assetProd($css));
       }
-      array_push($tags, ...$this->collectImportCss($import, $options));
+      array_push($tags, ...$this->collectImportCss($import));
     }
     return $tags;
   }
