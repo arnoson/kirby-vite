@@ -218,27 +218,27 @@ class Vite {
     }
 
     $options = array_merge(['type' => 'module'], $options);
-    $scripts = [];
+    $tags = [];
 
     // Client is only needed during development.
     if ($this->isDev() && !$this->hasClient) {
-      array_push($scripts, $this->client());
+      array_push($tags, $this->client());
       $this->hasClient = true;
     }
     
     // Legacy code is only needed in production.
     $legacy = !$this->isDev() && $this->config()['legacy'];
     if ($legacy && !$this->hasLegacyPolyfills) {
-      array_push($scripts, $this->legacyPolyfills());
+      array_push($tags, $this->legacyPolyfills());
       $this->hasLegacyPolyfills = true;
     }
     if ($legacy) {
-      array_push($scripts, $this->legacyJs($entry));
+      array_push($tags, $this->legacyJs($entry));
     }
 
     // Finally, add the entry itself.
-    array_push($scripts, js($file, $options));
-    return implode("\n", array_filter($scripts));
+    array_push($tags, js($file, $options));
+    return implode("\n", array_filter($tags));
   }
 
   /**
@@ -252,11 +252,11 @@ class Vite {
     array $options = [],
     bool $try = false
   ): ?string {
-    $scripts = [];
+    $tags = [];
 
     // Client is only needed during development.
     if ($this->isDev() && !$this->hasClient) {
-      array_push($scripts, $this->client());
+      array_push($tags, $this->client());
       $this->hasClient = true;
     }
 
@@ -265,24 +265,41 @@ class Vite {
     // 'standalone', meaning a css (or sass, ...) file. The css for an js entry
     // like `vite()->css('entry.js')` will be injected automatically.
     if ($this->isDev() && $entryIsStyle) {
-      array_push($scripts, css($this->assetDev($entry), $options));
+      array_push($tags, css($this->assetDev($entry), $options));
     }
 
     // If the entry is a css file we can simply add it...
     if (!$this->isDev() && $entryIsStyle) {
       $file = $this->manifestProperty($entry, 'file', $try);
-      if ($file) array_push($scripts, css($this->assetProd($file), $options));
+      if ($file) array_push($tags, css($this->assetProd($file), $options));
     }
     // ...but if it is a js file we have to look up the manifest and add all
-    // css files associated with the entry. 
+    // css files associated with the entry and it's imports. 
     if (!$this->isDev() && !$entryIsStyle) {
       $cssList = $this->manifestProperty($entry, 'css', $try) ?? [];
       foreach ($cssList as $css) {
-        array_push($scripts, css($this->assetProd($css), $options));
+        array_push($tags, css($this->assetProd($css), $options));
       }
+      array_push($tags, ...$this->collectImportCss($entry, $options));
     }
 
-    return count($scripts) ? implode("\n", $scripts) : null;
+    return count($tags) ? implode("\n", $tags) : null;
+  }
+
+  /**
+   * Recursively collect all the css of the manifest item and it's imports.
+   */
+  protected function collectImportCss(string $key, array $options = []): array {
+    $imports = $this->manifestProperty($key, 'imports', true) ?? [];
+    $tags = [];
+    foreach ($imports as $import) {
+      $cssList = $this->manifestProperty($import, 'css', true) ?? [];
+      foreach ($cssList as $css) {
+        array_push($tags, css($this->assetProd($css), $options));
+      }
+      array_push($tags, ...$this->collectImportCss($import, $options));
+    }
+    return $tags;
   }
 
   /**

@@ -49,10 +49,11 @@ it('it omits errors for missing JS entries when trying', function () {
 
 it('omits CSS imported by JS in development', function () {
   setMode('development');
-  // Call `vite()->js()` so the client is already included when we check for the
-  // css.
-  $this->vite->js('main.js');
-  expect($this->vite->css('main.js'))->toBe(null);
+  // We don't expect any css for the js entry, but the vite client is injected
+  // because this is the first css()/js() call.
+  expect($this->vite->css('main.js'))->toBe(
+    '<script src="http://localhost:5173/@vite/client" type="module"></script>'
+  );
   expect($this->vite->css('main.css'))->toBe(
     '<link href="http://localhost:5173/main.css" rel="stylesheet">'
   );
@@ -64,8 +65,11 @@ it('generates CSS for production', function () {
   $result = "<link href=\"/dist/assets/main.1234.css\" rel=\"stylesheet\">";
   expect($this->vite->css('main.css'))->toBe($result);
 
-  // Require the CSS for a JS file.
-  $result = "<link href=\"/dist/assets/main.1234.css\" rel=\"stylesheet\">";
+  // Require the CSS for a JS file (and its imports).
+  $result =
+    "<link href=\"/dist/assets/main.1234.css\" rel=\"stylesheet\">\n" .
+    "<link href=\"/dist/assets/chunk-1234.css\" rel=\"stylesheet\">\n" .
+    "<link href=\"/dist/assets/chunk-5678.css\" rel=\"stylesheet\">";
   expect($this->vite->css('main.js'))->toBe($result);
 
   $result =

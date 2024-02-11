@@ -3,12 +3,22 @@
     "file": "assets/main.1234.js",
     "src": "index.js",
     "isEntry": true,
-    "css": ["assets/main.1234.css"]
+    "css": ["assets/main.1234.css"],
+    "imports": ["_chunk-1234.js"]
   },
   "main.css": {
     "file": "assets/main.1234.css",
     "src": "main.css",
     "isEntry": true
+  },
+  "_chunk-1234.js": {
+    "file": "assets/chunk-1234.js",
+    "css": ["assets/chunk-1234.css"],
+    "imports": ["_chunk-5678.js"]
+  },
+  "_chunk-5678.js": {
+    "file": "assets/chunk-5678.js",
+    "css": ["assets/chunk-5678.css"]
   },
   "my-font.woff2": {
     "file": "assets/my-font.1234.woff2",
