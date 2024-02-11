@@ -1,13 +1,7 @@
 {
+  "plugins": ["@prettier/plugin-php"],
   "semi": false,
   "singleQuote": true,
-  "tabWidth": 2,
-  "overrides": [
-    {
-      "files": ".php",
-      "options": {
-        "braceStyle": "1tbs"
-      }
-    }
-  ]
+  "braceStyle": "1tbs",
+  "tabWidth": 2
 }
