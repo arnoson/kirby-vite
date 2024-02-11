@@ -12,6 +12,7 @@ class Vite {
   protected bool $hasLegacyPolyfills = false;
   protected ?bool $isDev = null;
   protected ?string $outDir = null;
+  protected ?string $server = null;
   protected ?array $manifest = null;
   protected ?array $config = null;
 
@@ -55,7 +56,7 @@ class Vite {
   }
 
   /**
-   * Get Vite's `outDir`, but relative to Kirby's index root.
+   * Get Vite's `outDir` relative to Kirby's index root.
    */
   protected function outDir(): string {
     return $this->outDir ??= kirby()->root('base')
@@ -76,6 +77,10 @@ class Vite {
    * @throws Exception
    */
   protected function server(): string {
+    if (isset($server)) {
+      return $server;
+    }
+
     $devDir = kirby()->root('base') ?? kirby()->root('index');
     $dev = F::read("$devDir/.dev");
 
@@ -84,7 +89,7 @@ class Vite {
       throw new Exception('VITE_SERVER not found in `.dev` file.');
     }
 
-    return $value;
+    return $this->server = $value;
   }
 
   /**
@@ -145,19 +150,12 @@ class Vite {
     return js($this->assetDev('@vite/client'), ['type' => 'module']);
   }
 
-  /**
-   * Get the url for the specified file for development mode.
-   */
   protected function assetDev(string $file): string {
     return $this->server() . "/$file";
   }
 
-  /**
-   * Get the URL for the specified file for production mode.
-   */
   protected function assetProd(string $file): string {
-    $outDir = $this->outDir();
-    return "/$outDir/$file";
+    return '/' . $this->outDir() . "/$file";
   }
 
   /**
@@ -211,9 +209,9 @@ class Vite {
   }
 
   /**
-   * Include the css file for the specified entry in production mode. Your CSS
-   * file can either be CSS entry `vite()->css('main.css')` or a js entry
-   * `vite()->css('main.js')`, in this case the CSS imported in the JS file will
+   * Include the css file for the specified entry in production mode. Your css
+   * file can either be css entry `vite()->css('main.css')` or a js entry
+   * `vite()->css('main.js')`, in this case the css imported in the js file will
    *  be used.
    */
   public function css(
