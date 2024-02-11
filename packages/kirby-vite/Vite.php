@@ -100,7 +100,8 @@ class Vite {
 
     $index = kirby()->root('index');
     $outDir = $this->outDir();
-    $manifestPath = "$index/$outDir/.vite/manifest.json";
+    $manifest = $this->config()['manifest'];
+    $manifestPath = "$index/$outDir/$manifest";
 
     if (!F::exists($manifestPath)) {
       if (option('debug')) {

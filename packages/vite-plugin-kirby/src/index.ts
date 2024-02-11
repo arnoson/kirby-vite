@@ -53,8 +53,9 @@ export default (
   return {
     name: 'vite-plugin-kirby',
 
-    config() {
-      return { build: { manifest: true } }
+    config({ build }) {
+      // Make sure a manifesto is generated.
+      return { build: { manifest: build?.manifest || true } }
     },
 
     async configResolved({ build, plugins, root }) {
@@ -67,7 +68,13 @@ export default (
 
       const file = `${kirbyConfigDir}/vite.config.php`
       const legacy = !!plugins.find((v) => v.name === 'vite:legacy-config')
-      const config = phpConfigTemplate({ outDir, assetsDir, legacy })
+      const manifest =
+        typeof build.manifest === 'string'
+          ? build.manifest
+          : '.vite/manifest.json'
+      const config = phpConfigTemplate({ outDir, assetsDir, legacy, manifest })
+
+      console.log({ build })
 
       // Only write the config file if it does't exist or has older content.
       try {
