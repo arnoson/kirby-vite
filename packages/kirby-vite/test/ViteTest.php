@@ -121,7 +121,7 @@ it('generates panel assets in development', function () {
   ]);
   expect($this->vite->panelCss('main.js'))->toBe(null);
   expect($this->vite->panelCss('main.css'))->toBe([
-    'http://localhost:5173/main.css'
+    'http://localhost:5173/main.css',
   ]);
 });
 
@@ -134,5 +134,7 @@ it('generates panel assets in production', function () {
     'dist/assets/chunk-1234.css',
     'dist/assets/chunk-5678.css',
   ]);
-  expect($this->vite->panelCss('main.css'))->toBe(['dist/assets/main.1234.css']);
+  expect($this->vite->panelCss('main.css'))->toBe([
+    'dist/assets/main.1234.css',
+  ]);
 });

@@ -27,16 +27,19 @@ class Vite {
       '/vite.config.php';
   }
 
-  protected function getRelativePath(string $rootPath, string $fullPath): ?string {
+  protected function getRelativePath(
+    string $rootPath,
+    string $fullPath
+  ): ?string {
     $rootPath = realpath(rtrim($rootPath, '/'));
     $fullPath = realpath(rtrim($fullPath, '/'));
-  
+
     if (str_starts_with($fullPath, $rootPath)) {
       return ltrim(substr($fullPath, strlen($rootPath)), DIRECTORY_SEPARATOR);
     }
-  
+
     return null;
-  }  
+  }
 
   /**
    * Get Vite's `outDir`, but relative to Kirby's index root. This is important
@@ -60,7 +63,7 @@ class Vite {
    * Check if we're in development mode.
    */
   protected function isDev(): bool {
-    return $this->isDev ??= F::exists($this->baseDir() . '/.dev');;
+    return $this->isDev ??= F::exists($this->baseDir() . '/.dev');
   }
 
   protected function isStyle(string $entry): bool {
@@ -193,7 +196,7 @@ class Vite {
     }
 
     $files = [];
-    
+
     foreach (A::wrap($entries) as $entry) {
       $isStyle = $this->isStyle($entry);
       if ($isStyle) {
@@ -239,7 +242,7 @@ class Vite {
       array_push($tags, $this->client());
       $this->hasClient = true;
     }
-    
+
     // Legacy code is only needed in production.
     $legacy = !$this->isDev() && $this->config()['legacy'];
     if ($legacy && !$this->hasLegacyPolyfills) {

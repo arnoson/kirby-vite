@@ -2,4 +2,5 @@
 **/kirby
 **/vendor
 **/media
+/example/site/accounts
 composer.lock
