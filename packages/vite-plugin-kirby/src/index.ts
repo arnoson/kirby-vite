@@ -74,8 +74,6 @@ export default (
           : '.vite/manifest.json'
       const config = phpConfigTemplate({ outDir, assetsDir, legacy, manifest })
 
-      console.log({ build })
-
       // Only write the config file if it does't exist or has older content.
       try {
         await access(file)
