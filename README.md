@@ -108,13 +108,24 @@ Sometimes you might want to access the (hashed) file path of your assets, e.g. t
 
 ## Trying
 
-If you try to load a non-existent manifest entry, this plugin will throw an error (if Kirby's `debug` option is enabled). This is intended behaviour, since you usually know which entries exist. But sometimes, especially in a multi-page setup, you may want to try to load an entry only if it exists. You can do this with the `try` flag:
+If you try to load a non-existent manifest entry, this plugin will throw an error (if Kirby's `debug` option is enabled). This is intended behavior, since you usually know which entries exist. But sometimes, especially in a multi-page setup, you may want to try to load an entry only if it exists. You can do this with the `try` flag:
 
 ```php
-vite()->js('templates/' . $page->template() . '/index.js', try: true);
-vite()->css('templates/' . $page->template() . '/index.css', try: true);
+vite()->js('templates/' . $page->template() . '.js', try: true);
+vite()->css('templates/' . $page->template() . '.css', try: true);
 vite()->file('maybe.woff2', try: true);
 ```
+
+## Query Language
+
+Since version `v5.3.0` you can use Kirby's query language in your entry names:
+
+```php
+vite()->js('templates/{{ page.template }}.js');
+vite()->css('templates/{{ page.template }}.css');
+```
+
+Note: this will throw errors in debug mode if the assets don't exist. So you might want to use [Trying](#trying) to make the assets optional.
 
 ## Legacy build
 

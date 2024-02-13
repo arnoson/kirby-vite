@@ -42,10 +42,28 @@ it('throws errors for missing JS entries', function () {
   $this->vite->js('does-not-exists.js');
 })->throws('`does-not-exists.js` is not a manifest entry.');
 
-it('it omits errors for missing JS entries when trying', function () {
-  setMode('production');
-  $this->vite->js('does-not-exists.js', try: true);
-})->throwsNoExceptions();
+it(
+  'omits errors for missing JS entries when trying in production',
+  function () {
+    setMode('production');
+    $this->vite->js('does-not-exists.js', try: true);
+  }
+)->throwsNoExceptions();
+
+it('omits missing JS entries when trying in development', function () {
+  setMode('development');
+  expect($this->vite->js('does-not-exists.js', try: true))->toBe(
+    '<script src="http://localhost:5173/@vite/client" type="module"></script>'
+  );
+});
+
+it('omits missing CSS entries when trying in development', function () {
+  setMode('development');
+  expect($this->vite->css('does-not-exists.css', try: true))->toBe(
+    '<script src="http://localhost:5173/@vite/client" type="module"></script>'
+  );
+  expect($this->vite->css('does-not-exists.js', try: true))->toBe(null);
+});
 
 it('omits CSS imported by JS in development', function () {
   setMode('development');
