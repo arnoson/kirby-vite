@@ -12,6 +12,7 @@ class Vite {
   protected bool $hasLegacyPolyfills = false;
   protected ?bool $isDev = null;
   protected ?string $outDir = null;
+  protected ?string $rootDir = null;
   protected ?string $server = null;
   protected ?array $manifest = null;
   protected ?array $config = null;
@@ -31,6 +32,12 @@ class Vite {
       ['css', 'scss', 'sass', 'less', 'styl', 'stylus'],
       true
     );
+  }
+
+  protected function exists(string $entry) {
+    return $this->isDev()
+      ? F::exists($this->rootDir() . '/' . $entry)
+      : !!$this->manifestProperty($entry, try: true);
   }
 
   protected function getRelativePath(
@@ -70,6 +77,12 @@ class Vite {
   protected function baseDir(): string {
     return kirby()->root('base') ?? kirby()->root('index');
   }
+
+  protected function rootDir(): string {
+    return $this->rootDir ??= $this->config()['rootDir']
+      ? $this->baseDir() . '/' . $this->config()['rootDir']
+      : $this->baseDir(); 
+  }  
 
   /**
    * Read vite's dev server from the `.dev` file.
@@ -179,8 +192,7 @@ class Vite {
     array $options = [],
     bool $try = false
   ): ?string {
-    $file = $this->file($entry, $try);
-    if (!$file && $try) {
+    if ($try && !$this->exists($entry)) {
       return null;
     }
 
@@ -204,6 +216,7 @@ class Vite {
     }
 
     // Finally, add the entry itself.
+    $file = $this->file($entry, $try);
     array_push($tags, js($file, $options));
     return implode("\n", array_filter($tags));
   }
@@ -219,6 +232,10 @@ class Vite {
     array $options = [],
     bool $try = false
   ): ?string {
+    if ($try && !$this->exists($entry)) {
+      return null;
+    }
+
     $isStyle = $this->isStyle($entry);
     $tags = [];
 

@@ -31,6 +31,7 @@ const phpConfigTemplate = (config: Record<string, any>) => `<?php
 // Configure your settings in the "vite.config.js" file instead.
 return [
 ${Object.entries(config)
+  .filter(([, value]) => value !== undefined)
   .map(([key, value]) => {
     if (typeof value === 'string') value = `'${value}'`
     return `  '${key}' => ${value}`
@@ -69,10 +70,15 @@ export default (
       const file = `${kirbyConfigDir}/vite.config.php`
       const legacy = !!plugins.find((v) => v.name === 'vite:legacy-config')
       const manifest =
-        typeof build.manifest === 'string'
-          ? build.manifest
-          : '.vite/manifest.json'
-      const config = phpConfigTemplate({ outDir, assetsDir, legacy, manifest })
+        typeof build.manifest === 'string' ? build.manifest : undefined
+      const rootDir = relative(process.cwd(), root) || undefined
+      const config = phpConfigTemplate({
+        rootDir,
+        outDir,
+        assetsDir,
+        legacy,
+        manifest,
+      })
 
       // Only write the config file if it does't exist or has older content.
       try {
