@@ -3,4 +3,5 @@
 **/vendor
 **/media
 /example/site/accounts
+/example/site/config/vite.config.php
 composer.lock
