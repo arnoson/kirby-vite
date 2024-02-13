@@ -20,7 +20,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --clean --dts"
+    "build": "tsup src/index.ts --format esm,cjs --clean --dts",
+    "dev": "npm run build -- --watch"
   },
   "author": "arnoson",
   "repository": {
