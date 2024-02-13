@@ -236,7 +236,7 @@ class Vite {
     }
 
     // The css for an js entry will be injected automatically in development,
-    // so only have to handle production.
+    // so we only have to handle production.
     if (!$isStyle && !$this->isDev()) {
       $cssList = $this->manifestProperty($entry, 'css', $try) ?? [];
       foreach ($cssList as $css) {
