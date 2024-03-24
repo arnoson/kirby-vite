@@ -1,6 +1,6 @@
 import type { Plugin, ViteDevServer } from 'vite'
 import { relative, resolve, sep } from 'node:path'
-import { writeFile, readFile, unlink, access } from 'node:fs/promises'
+import { writeFile, readFile, unlink, access, mkdir } from 'node:fs/promises'
 import { liveReload } from 'vite-plugin-live-reload'
 
 export interface Config {
@@ -86,6 +86,7 @@ export default (
         const oldConfig = await readFile(file, 'utf-8')
         if (config !== oldConfig) await writeFile(file, config)
       } catch (err) {
+        await mkdir(kirbyConfigDir, { recursive: true })
         await writeFile(file, config)
       }
     },
