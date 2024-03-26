@@ -22,7 +22,7 @@ class Vite {
     return self::$instance ??= new self();
   }
 
-  protected function isDev(): bool {
+  public function isDev(): bool {
     return $this->isDev ??= F::exists($this->baseDir() . '/.dev');
   }
 
