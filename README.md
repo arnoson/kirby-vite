@@ -66,7 +66,7 @@ export default ({ mode }) => ({
     // Where your manifest an bundled assets will be placed. This example
     // assumes you use a public folder structure.
     outDir: 'public/dist',
-    assetsDir: 'assets'
+    assetsDir: 'assets',
 
     // Your entry file(s).
     // Note: CSS files can either be a separate entry. In this case you use it
@@ -76,7 +76,7 @@ export default ({ mode }) => ({
     rollupOptions: {
       input: ['main.js', 'main.css']
     }
-  }
+  },
 
   plugins: [kirby({
     // By default Kirby's templates, snippets, controllers, models, layouts and
@@ -85,7 +85,7 @@ export default ({ mode }) => ({
     watch: [
       '../site/(templates|snippets|controllers|models|layouts)/**/*.php',
       '../content/**/*',
-    ]
+    ],
     // or disable watching
     watch: false,
 
