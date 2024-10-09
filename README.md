@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./.github/logo.svg"
+  <img src="./.github/logo.svg?2"
  alt="Kirby Vite Plugin" width="350" height="350">
 </p>
 
