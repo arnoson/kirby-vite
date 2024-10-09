@@ -1,9 +1,11 @@
 <p align="center">
-  <img src="./.github/logo.svg?2"
+  <img src="./.github/logo.svg?3"
  alt="Kirby Vite Plugin" width="160" height="160">
 </p>
 
-<h2 align="center">Use Kirby CMS together with Vite</h2>
+<h1 align="center">Kirby Vite</h1>
+
+Bundle your Kirby frontend assets with Vite.
 
 ## Getting started
 
