@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="./.github/logo.svg"
- alt="Kirby Vite Plugin" width="350" height="350">
+  <img src="./.github/logo.svg?2"
+ alt="Kirby Vite Plugin" width="160" height="160">
 </p>
 
 <h2 align="center">Use Kirby CMS together with Vite</h2>
@@ -74,25 +74,27 @@ export default ({ mode }) => ({
     // `main.js` as an entry and import the CSS in your JS file. In this case
     // you would use the JS file name: `vite()->css('main.js')`.
     rollupOptions: {
-      input: ['main.js', 'main.css']
-    }
+      input: ['main.js', 'main.css'],
+    },
   },
 
-  plugins: [kirby({
-    // By default Kirby's templates, snippets, controllers, models, layouts and
-    // everything inside the content folder will be watched and a full reload
-    // triggered. All paths are relative to Vite's root folder.
-    watch: [
-      '../site/(templates|snippets|controllers|models|layouts)/**/*.php',
-      '../content/**/*',
-    ],
-    // or disable watching
-    watch: false,
+  plugins: [
+    kirby({
+      // By default Kirby's templates, snippets, controllers, models, layouts and
+      // everything inside the content folder will be watched and a full reload
+      // triggered. All paths are relative to Vite's root folder.
+      watch: [
+        '../site/(templates|snippets|controllers|models|layouts)/**/*.php',
+        '../content/**/*',
+      ],
+      // or disable watching
+      watch: false,
 
-    // Where the automatically generated `vite.config.php` file should be
-    // placed. This has to match Kirby's config folder!
-    kirbyConfigDir: 'site/config' // default
-  })],
+      // Where the automatically generated `vite.config.php` file should be
+      // placed. This has to match Kirby's config folder!
+      kirbyConfigDir: 'site/config', // default
+    }),
+  ],
 })
 ```
 
