@@ -1,6 +1,8 @@
 <p align="center">
-  <img src="./.github/logo.svg?3"
- alt="Kirby Vite Plugin" width="160" height="160">
+  <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./.github/logo-dark.svg">
+      <img src="./.github/logo-light.svg" alt="" />
+  </picture>
 </p>
 
 <h1 align="center">Kirby Vite</h1>
