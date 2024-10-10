@@ -7,11 +7,7 @@
 
 <h1 align="center">Kirby Vite</h1>
 
-Bundle your Kirby frontend assets with Vite.
-
-## Getting started
-
-The easiest way to get started is using the [basic starter kit](https://github.com/arnoson/kirby-vite-basic-kit) or the [multi-page kit](https://github.com/arnoson/kirby-vite-multi-page-kit).
+Bundle your Kirby frontend assets with Vite. The easiest way to get started is using the [basic starter kit](https://github.com/arnoson/kirby-vite-basic-kit) or the [multi-page kit](https://github.com/arnoson/kirby-vite-multi-page-kit).
 
 ## Usage
 
