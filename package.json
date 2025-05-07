@@ -7,8 +7,8 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@prettier/plugin-php": "^0.22.2",
-    "bumpp": "^9.1.1",
-    "prettier": "^3.0"
+    "@prettier/plugin-php": "^0.22.4",
+    "bumpp": "^10.1.0",
+    "prettier": "^3.5.3"
   }
 }
