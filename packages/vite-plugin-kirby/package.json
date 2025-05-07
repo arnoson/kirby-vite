@@ -30,13 +30,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.17.9",
-    "@vitejs/plugin-legacy": "^6.0.0",
-    "bumpp": "^9.8.1",
+    "@types/node": "^20.17.43",
+    "@vitejs/plugin-legacy": "^6.1.1",
+    "bumpp": "^10.1.0",
     "picocolors": "^1.1.1",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.2"
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   },
   "homepage": "https://github.com/arnoson/vite-plugin-kirby#readme",
   "dependencies": {
