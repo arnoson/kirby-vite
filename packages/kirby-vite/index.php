@@ -4,7 +4,7 @@ use arnoson\KirbyVite\Vite;
 
 require_once __DIR__ . '/Vite.php';
 
-Kirby\Cms\App::plugin('arnoson/kirby-vite');
+Kirby\Cms\App::plugin('arnoson/kirby-vite', []);
 
 function vite() {
   return Vite::getInstance();
