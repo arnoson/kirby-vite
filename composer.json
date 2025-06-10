@@ -4,6 +4,12 @@
   "version": "5.5.0",
   "type": "kirby-plugin",
   "license": "MIT",
+  "keywords": [
+    "vite",
+    "kirby3",
+    "kirby4",
+    "kirby5"
+  ],
   "authors": [
     {
       "name": "Arno Schlipf"
