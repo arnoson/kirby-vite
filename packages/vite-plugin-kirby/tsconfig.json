@@ -2,7 +2,7 @@
   "include": ["src"],
   "compilerOptions": {
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "target": "esnext"
   }
