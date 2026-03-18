@@ -8,7 +8,7 @@
   },
   "require-dev": {
     "getkirby/cms": "^4.0 || ^5.0",
-    "pestphp/pest": "^3.8"
+    "pestphp/pest": "^4.0"
   },
   "config": {
     "allow-plugins": {
