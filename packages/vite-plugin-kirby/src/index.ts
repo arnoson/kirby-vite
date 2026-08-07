@@ -107,9 +107,9 @@ export default (
 
       if (!exitHandlersRegistered) {
         process.on('exit', removeDevFile)
-        process.on('SIGINT', process.exit)
-        process.on('SIGTERM', process.exit)
-        process.on('SIGHUP', process.exit)
+        process.on('SIGINT', () => process.exit(0))
+        process.on('SIGTERM', () => process.exit(0))
+        process.on('SIGHUP', () => process.exit(0))
         exitHandlersRegistered = true
       }
 
