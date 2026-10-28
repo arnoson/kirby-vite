@@ -34,13 +34,13 @@
     "@vitejs/plugin-legacy": "^8.0.0",
     "bumpp": "^10",
     "picocolors": "^1.1.1",
-    "tsup": "^8.4.0",
+    "tsup": "^9.0.0",
     "typescript": "^5.8.3",
     "vite": "^8.0.0"
   },
   "homepage": "https://github.com/arnoson/vite-plugin-kirby#readme",
   "dependencies": {
-    "vite-plugin-live-reload": "^3.0.4"
+    "vite-plugin-live-reload": "^4.0.0"
   },
   "peerDependencies": {
     "vite": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"

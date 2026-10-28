@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import kirby from '../packages/vite-plugin-kirby'
+import kirby from '../packages/vite-plugin-kirby/dist/index.js'
 
 // console.log(resolve(process.cwd(), 'src/index.js'))
 

@@ -1,8 +1,9 @@
 {
+  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --configLoader native",
     "server": "php -S localhost:8888 ./kirby/router.php",
-    "build": "vite build"
+    "build": "vite build --configLoader native"
   },
   "dependencies": {
     "vite": "^8.0.0"
