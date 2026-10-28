@@ -8,7 +8,8 @@
     "vite",
     "kirby3",
     "kirby4",
-    "kirby5"
+    "kirby5",
+    "kirby6"
   ],
   "authors": [
     {
@@ -24,6 +25,11 @@
   "config": {
     "allow-plugins": {
       "getkirby/composer-installer": true
+    }
+  },
+  "extra": {
+    "kirby": {
+      "compatible": "^3.7 || ^4.0 || ^5.0 || ^6.0"
     }
   }
 }
